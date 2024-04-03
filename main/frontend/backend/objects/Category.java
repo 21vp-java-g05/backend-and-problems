@@ -54,7 +54,7 @@ public class Category {
 			if (! db.update("CATEGORY", value, condition)) return false;
 
 			if (! status) {
-				condition = "CATEGORY_BOOK.book_id = BOOK.ID AND CATEGORY_BOOK.category_id = " + String.valueOf(id);
+				condition = "book_id = id AND category_id = " + String.valueOf(id);
 				if (! db.updateFrom("BOOK", "status = false", "CATEGORY_BOOK", condition)) {
 					db.rollback();
 					return false;

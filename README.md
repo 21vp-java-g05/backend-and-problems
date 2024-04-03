@@ -1,2 +1,3 @@
 # backend-and-problems
-run code in Main.java
+Nhớ add driver vào Reference Libraries (https://jdbc.postgresql.org/download/)
+Test code ở Main.java
