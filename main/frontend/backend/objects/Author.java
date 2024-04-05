@@ -39,10 +39,15 @@ public class Author {
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
 		String value = "(" + this.toString() + ")";
-		boolean rs = db.add("AUTHOR", value, true);
+		int rs = db.add("AUTHOR", value, true);
+		if (rs < 1) {
+			if (rs == 0)
+				System.err.println("This author is already in the database");
+			return false;
+		}
 		
 		db.close();
-		return rs;
+		return true;
 	}
 	public boolean update_toDatabase() {
 		DBconnect db = new DBconnect();
@@ -51,11 +56,16 @@ public class Author {
 
 		try {
 			db.turnAutoCommitOff();
-			if (! db.update("AUTHOR", value, condition)) return false;
+			int rs = db.update("AUTHOR", value, condition);
+			if (rs <= 0) {
+				if (rs == 0)
+					System.err.println("Author cannot found");
+				return false;
+			}
 
 			if (! status) {
 				condition = "author = " + String.valueOf(id) + " AND status = true";
-				if (! db.update("BOOK", "status = false", condition)) {
+				if (db.update("BOOK", "status = false", condition) < 0) {
 					db.rollback();
 					return false;
 				}
@@ -71,34 +81,14 @@ public class Author {
 	public boolean delete_toDatabase() {
 		DBconnect db = new DBconnect();
 		String condition = "id = " + String.valueOf(id);
-		boolean rs = db.delete("AUTHOR", condition);
+		int rs = db.delete("AUTHOR", condition);
+		if (rs <= 0) {
+			if (rs == 0)
+				System.err.println("Cannot found author");
+			return false;
+		}
 		
 		db.close();
-		return rs;
-	}
-	public boolean changeId(int id) {
-		DBconnect db = new DBconnect();
-		String value = "id = " + String.valueOf(this.id);
-		String condition = "id = " + String.valueOf(id);
-		
-		try {
-			db.turnAutoCommitOff();
-			if (! db.update("AUTHOR", value, condition)) return false;
-			
-			value = "author = " + String.valueOf(id);
-			if (! db.update("BOOK", value, "author = " + String.valueOf(this.id))) {
-				db.rollback();
-				return false;
-			}
-			
-			this.id = id;
-			db.commit();
-		} catch (SQLException e) {
-			System.err.println("Change id");
-			e.printStackTrace();
-			return false;
-		} finally { db.close(); }
-
 		return true;
 	}
 

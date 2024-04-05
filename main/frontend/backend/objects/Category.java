@@ -39,10 +39,15 @@ public class Category {
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
 		String value = "(" + this.toString() + ")";
-		boolean rs = db.add("CATEGORY", value, true);
+		int rs = db.add("AUTHOR", value, true);
+		if (rs < 1) {
+			if (rs == 0)
+				System.err.println("This author is already in the database");
+			return false;
+		}
 		
 		db.close();
-		return rs;
+		return true;
 	}
 	public boolean update_toDatabase(int id) {
 		DBconnect db = new DBconnect();
@@ -51,11 +56,16 @@ public class Category {
 
 		try {
 			db.turnAutoCommitOff();
-			if (! db.update("CATEGORY", value, condition)) return false;
+			int rs = db.update("CATEGORY", value, condition);
+			if (rs <= 0) {
+				if (rs == 0)
+					System.err.println("Category cannot found");
+				return false;
+			}
 
 			if (! status) {
 				condition = "book_id = id AND category_id = " + String.valueOf(id);
-				if (! db.updateFrom("BOOK", "status = false", "CATEGORY_BOOK", condition)) {
+				if (db.updateFrom("BOOK", "status = false", "CATEGORY_BOOK", condition) < 0) {
 					db.rollback();
 					return false;
 				}
@@ -71,34 +81,14 @@ public class Category {
 	public boolean delete_toDatabase() {
 		DBconnect db = new DBconnect();
 		String condition = "id = " + String.valueOf(id);
-		boolean rs = db.delete("CATEGORY", condition);
+		int rs = db.delete("CATEGORY", condition);
+		if (rs <= 0) {
+			if (rs == 0)
+				System.err.println("Cannot found category");
+			return false;
+		}
 		
 		db.close();
-		return rs;
-	}
-	public boolean changeId(int id) {
-		DBconnect db = new DBconnect();
-		String value = "id = " + String.valueOf(this.id);
-		String condition = "id = " + String.valueOf(id);
-		
-		try {
-			db.turnAutoCommitOff();
-			if (! db.update("CATEGORY", value, condition)) return false;
-			
-			// Change category_id to category_book
-			if (! db.update("CATEGORY_BOOK", value, "category_" + condition)) {
-				db.rollback();
-				return false;
-			}
-			
-			this.id = id;
-			db.commit();
-		} catch (SQLException e) {
-			System.err.println("Change id");
-			e.printStackTrace();
-			return false;
-		} finally { db.close(); }
-
 		return true;
 	}
 	

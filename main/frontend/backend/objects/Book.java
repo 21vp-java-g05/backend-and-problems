@@ -26,7 +26,7 @@ public class Book {
 		this.status = status;
 	}
 	public Book(int id, String title, String isbn, String language, int number_of_pages, Publisher publisher, Author author, CategoryList categories) {
-		this(id, isbn, title, language, number_of_pages, publisher, author, categories, true);
+		this(id, title, isbn, language, number_of_pages, publisher, author, categories, true);
 	}
 	public Book(Book other) {
 		this(other.id, other.isbn, other.title, other.language, other.number_of_pages, other.publisher, other.author, other.categories, other.status);
@@ -70,7 +70,12 @@ public class Book {
 		
 		try {
 			db.turnAutoCommitOff();
-			if (! db.add("BOOK", value, true)) return false;
+			int rs = db.add("BOOK", value, false);
+			if (rs < 1) {
+				if (rs == 0)
+					System.err.println("This book is already in the database");
+				return false;
+			}
 
 			String id_Str = String.valueOf(id);
 			value = "";
@@ -78,7 +83,7 @@ public class Book {
 				value += ", (" + String.valueOf(ca.getId()) + ", " + id_Str + ")";
 			value = value.substring(2);
 
-			if (! db.add("CATEGORY_BOOK", value, false)) {
+			if (db.add("CATEGORY_BOOK", value, false) < 0) {
 				db.rollback();
 				return false;
 			}
@@ -98,14 +103,20 @@ public class Book {
 
 		try {
 			db.turnAutoCommitOff();
+			// Check status of author, publisher and category
 			if (status) {
-				if (! db.view("status", "AUTHOR", "id = " + author).getBoolean(0)) return false;
-				if (! db.view("status", "PUBLISHER", "id = " + publisher).getBoolean(0)) return false;
+				if (! db.view("status", "AUTHOR", "id = " + author).getBoolean("status")) return false;
+				if (! db.view("status", "PUBLISHER", "id = " + publisher).getBoolean("status")) return false;
 				ResultSet rs = db.view("status", "CATEGORY, CATEGORY_BOOK", "id = category_id AND book_id = " + String.valueOf(id));
 				while (rs.next())
-					if (! rs.getBoolean(0)) return false;
+					if (! rs.getBoolean("status")) return false;
 			}
-			if (db.update("BOOK", value, condition)) return false;
+			int rs = db.update("BOOK", value, condition);
+			if (rs <= 0) {
+				if (rs == 0)
+					System.err.println("Book cannot found");
+				return false;
+			}
 			
 			db.commit();
 		} catch (SQLException e) {
@@ -118,30 +129,22 @@ public class Book {
 	public boolean delete_toDatabase() {
 		DBconnect db = new DBconnect();
 		String condition = "id = " + String.valueOf(id);
-		boolean rs = db.delete("BOOK", condition);
-		
-		db.close();
-		return rs;
-	}
-	public boolean changeId(int id) {
-		DBconnect db = new DBconnect();
-		String value = "id = " + String.valueOf(this.id);
-		String condition = "id = " + String.valueOf(id);
 		
 		try {
 			db.turnAutoCommitOff();
-			if (! db.update("BOOK", value, condition)) return false;
+			if (db.delete("CATEGORY_BOOK", "book_" + condition) < 0) return false;
 			
-			value = "book_id = " + String.valueOf(id);
-			if (! db.update("CATEGORY_BOOK", value, "book_" + condition)) {
+			int rs = db.delete("BOOK", condition);
+			if (rs <= 0) {
+				if (rs == 0)
+					System.err.println("Cannot found author");
 				db.rollback();
 				return false;
 			}
-			
-			this.id = id;
+
 			db.commit();
 		} catch (SQLException e) {
-			System.err.println("Change id");
+			System.err.println("Delete table");
 			e.printStackTrace();
 			return false;
 		} finally { db.close(); }

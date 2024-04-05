@@ -23,7 +23,7 @@ CREATE TABLE BOOK (
 	id SERIAL PRIMARY KEY,
 	title VARCHAR(255) NOT NULL,
 	isbn CHAR(13) UNIQUE NOT NULL,
-	language VARCHAR(255),
+	language VARCHAR(127),
 	number_of_pages INT,
 	publisher INT NOT NULL,
 	author INT NOT NULL,

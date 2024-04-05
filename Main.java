@@ -1,20 +1,29 @@
 import main.frontend.backend.lists.AuthorList;
-import main.frontend.backend.lists.BookList;
 import main.frontend.backend.lists.CategoryList;
 import main.frontend.backend.lists.PublisherList;
 import main.frontend.backend.objects.Author;
-import main.frontend.backend.utils.DBconnect;
+import main.frontend.backend.objects.Book;
+import main.frontend.backend.objects.Publisher;
 
 public class Main {
 	public static void main(String[] args) {
-		AuthorList aList = new AuthorList();
-		PublisherList pList = new PublisherList();
-		CategoryList cList = new CategoryList();
-		BookList bList = new BookList();
+		AuthorList authorList = new AuthorList();
+		PublisherList publisherList = new PublisherList();
+		CategoryList categoryList = new CategoryList();
+		
+		authorList.load_fromDatabase(null);
+		publisherList.load_fromDatabase(null);
+		categoryList.load_fromDatabase(null);
 
-		bList.loadBooks_fromDatabase(null, pList, aList, cList);
+		Author author = authorList.getAuthorByID(1);
+		Publisher publisher = publisherList.getPublisherByID(1);
+		CategoryList categories = new CategoryList();
+		categories.add(categoryList.getCategoryByID(1));
 
-		System.out.println(cList);
-		System.out.println(bList);
+		Book book = new Book(40, "Minh", "1234567890123", "Vietnamese", 900, publisher, author, categories);
+
+		// System.out.println(book);
+		book.update_toDatabase();
+		// book.delete_toDatabase();
 	}
 }

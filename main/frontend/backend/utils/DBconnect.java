@@ -45,28 +45,26 @@ public class DBconnect {
 		return rs;
 	}
 	private int checkExists(String object, String condition) {
+		int count = 0;
 		try {
-			if (view(null, object, condition).next()) return 1;
+			while (view(null, object, condition).next()) count++;
 		} catch (SQLException e) {
 			System.err.println("Check exits");
 			e.printStackTrace();
 			return -1;
 		}
-		return 0;
+		return count;
 	}
-	public boolean add(String object, String value, boolean checkExist) {
+	public int add(String object, String value, boolean checkName) {
 		String query;
-		if (checkExist) {
+		if (checkName) {
 			// Get id
 			String name = value.split(",")[1];
 			name = name.substring(1);
 			
 			// Check existing
 			query = "name = " + name;
-			if (checkExists(object, query) == 1) {
-				System.err.println("This " + object + " is already existing");
-				return false;
-			}
+			if (checkExists(object, query) > 0) return 0;
 		}
 		
 		// Add
@@ -79,12 +77,11 @@ public class DBconnect {
 		} catch (SQLException e) {
 			System.err.println("Add");
 			e.printStackTrace();
-			return false;
+			return -1;
 		}
-		
-		return result > 0;
+		return result;
 	}
-	public boolean update(String object, String value, String condition) {
+	public int update(String object, String value, String condition) {
 		String query = "UPDATE " + object + " SET " + value + " WHERE " + condition;
 		int result;
 		
@@ -94,12 +91,12 @@ public class DBconnect {
 		} catch (SQLException e) {
 			System.err.println("Update");
 			e.printStackTrace();
-			return false;
+			return -1;
 		}
 
-		return result > 0;
+		return result;
 	}
-	public boolean updateFrom(String object, String value, String sub, String condition) {
+	public int updateFrom(String object, String value, String sub, String condition) {
 		String query = "UPDATE " + object + " SET " + value + "FROM (" + sub + ")" + " WHERE " + condition;
 		int result;
 		
@@ -109,12 +106,12 @@ public class DBconnect {
 		} catch (SQLException e) {
 			System.err.println("Update");
 			e.printStackTrace();
-			return false;
+			return -1;
 		}
 
-		return result > 0;
+		return result;
 	}
-	public boolean changeStatus(String object, String condition, boolean status) {
+	public int changeStatus(String object, String condition, boolean status) {
 		String query = "UPDATE " + object + " SET Enabled = " + String.valueOf(status) + " WHERE " + condition;
 		int result;
 		
@@ -124,12 +121,12 @@ public class DBconnect {
 		} catch (SQLException e) {
 			System.err.println("Change status");
 			e.printStackTrace();
-			return false;
+			return -1;
 		}
 		
-		return result > 0;
+		return result;
 	}
-	public boolean delete(String object, String condition) {
+	public int delete(String object, String condition) {
 		String query = "DELETE FROM " + object + " WHERE " + condition;
 		int result;
 		
@@ -139,10 +136,10 @@ public class DBconnect {
 		} catch (SQLException e) {
 			System.err.println("Delete");
 			e.printStackTrace();
-			return false;
+			return -1;
 		}
 
-		return result > 0;
+		return result;
 	}
 
 	public Connection getConnection() {
