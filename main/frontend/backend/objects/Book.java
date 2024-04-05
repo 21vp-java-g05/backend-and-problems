@@ -77,6 +77,33 @@ public class Book {
 				return false;
 			}
 
+			// Check status of author, publisher and category and change book's status
+			if (status) {
+				if (
+					! db.view(null, "AUTHOR", "id = " + String.valueOf(author)).getBoolean("status") ||
+					! db.view(null, "Publisher", "id = " + String.valueOf(publisher)).getBoolean("status")
+				) {
+					status = false;
+					System.out.println("Status is changed into false");
+				} else {
+					try {
+						ResultSet result = db.view("status", "CATEGORY, CATEGORY_BOOK", "id = category_id AND book_id = " + String.valueOf(id));
+						while (result.next()) {
+							if (! result.getBoolean("status")) {
+								status = false;
+								System.out.println("Status is changed into false");
+								break;
+							}
+						}
+					} catch (SQLException e) {
+						System.err.println("Check category status");
+						e.printStackTrace();
+						db.rollback();
+						return false;
+					}
+				}
+			}
+
 			String id_Str = String.valueOf(id);
 			value = "";
 			for (Category ca : categories.getCategories())

@@ -22,8 +22,12 @@ public class Main {
 
 		Book book = new Book(40, "Minh", "1234567890123", "Vietnamese", 900, publisher, author, categories);
 
+		// author.setName("He he");
+		// System.out.println(author.update_toDatabase());
+
 		// System.out.println(book);
-		book.update_toDatabase();
+		System.out.println(book.add_toDatabase());
+		// book.update_toDatabase();
 		// book.delete_toDatabase();
 	}
 }
