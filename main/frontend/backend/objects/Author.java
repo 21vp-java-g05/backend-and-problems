@@ -39,7 +39,7 @@ public class Author {
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
 		String value = "(" + this.toString() + ")";
-		int rs = db.add("AUTHOR", value, true);
+		int rs = db.add("AUTHOR", value);
 		if (rs < 1) {
 			if (rs == 0)
 				System.err.println("This author is already in the database");

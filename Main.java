@@ -25,8 +25,11 @@ public class Main {
 		// author.setName("He he");
 		// System.out.println(author.update_toDatabase());
 
+		author.setId(50);
+		author.add_toDatabase();
+
 		// System.out.println(book);
-		System.out.println(book.add_toDatabase());
+		// System.out.println(book.add_toDatabase());
 		// book.update_toDatabase();
 		// book.delete_toDatabase();
 	}

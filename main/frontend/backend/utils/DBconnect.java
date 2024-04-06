@@ -55,20 +55,8 @@ public class DBconnect {
 		}
 		return count;
 	}
-	public int add(String object, String value, boolean checkName) {
-		String query;
-		if (checkName) {
-			// Get id
-			String name = value.split(",")[1];
-			name = name.substring(1);
-			
-			// Check existing
-			query = "name = " + name;
-			if (checkExists(object, query) > 0) return 0;
-		}
-		
-		// Add
-		query = "INSERT INTO " + object + " VALUES " + value;
+	public int add(String object, String value) {
+		String query = "INSERT INTO " + object + " VALUES " + value;
 		int result;
 		
 		try {

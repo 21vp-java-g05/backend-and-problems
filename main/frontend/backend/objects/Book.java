@@ -70,7 +70,7 @@ public class Book {
 		
 		try {
 			db.turnAutoCommitOff();
-			int rs = db.add("BOOK", value, false);
+			int rs = db.add("BOOK", value);
 			if (rs < 1) {
 				if (rs == 0)
 					System.err.println("This book is already in the database");
@@ -78,14 +78,14 @@ public class Book {
 			}
 
 			// Check status of author, publisher and category and change book's status
-			if (status) {
-				if (
-					! db.view(null, "AUTHOR", "id = " + String.valueOf(author)).getBoolean("status") ||
-					! db.view(null, "Publisher", "id = " + String.valueOf(publisher)).getBoolean("status")
-				) {
+			// if (status) {
+			// 	if (
+			// 		! db.view(null, "AUTHOR", "id = " + String.valueOf(author)).getBoolean("status") ||
+			// 		! db.view(null, "Publisher", "id = " + String.valueOf(publisher)).getBoolean("status")
+			// 	) {
 					status = false;
 					System.out.println("Status is changed into false");
-				} else {
+				// } else {
 					try {
 						ResultSet result = db.view("status", "CATEGORY, CATEGORY_BOOK", "id = category_id AND book_id = " + String.valueOf(id));
 						while (result.next()) {
@@ -101,8 +101,8 @@ public class Book {
 						db.rollback();
 						return false;
 					}
-				}
-			}
+				// }
+			// }
 
 			String id_Str = String.valueOf(id);
 			value = "";
@@ -110,7 +110,7 @@ public class Book {
 				value += ", (" + String.valueOf(ca.getId()) + ", " + id_Str + ")";
 			value = value.substring(2);
 
-			if (db.add("CATEGORY_BOOK", value, false) < 0) {
+			if (db.add("CATEGORY_BOOK", value) < 0) {
 				db.rollback();
 				return false;
 			}

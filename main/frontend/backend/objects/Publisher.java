@@ -39,7 +39,7 @@ public class Publisher {
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
 		String value = "(" + this.toString() + ")";
-		int rs = db.add("PUBLISHER", value, true);
+		int rs = db.add("PUBLISHER", value);
 		if (rs < 1) {
 			if (rs == 0)
 				System.err.println("This publisher is already in the database");
