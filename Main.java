@@ -1,4 +1,5 @@
 import main.frontend.backend.lists.AuthorList;
+import main.frontend.backend.lists.BookList;
 import main.frontend.backend.lists.CategoryList;
 import main.frontend.backend.lists.PublisherList;
 import main.frontend.backend.objects.Author;
@@ -10,27 +11,14 @@ public class Main {
 		AuthorList authorList = new AuthorList();
 		PublisherList publisherList = new PublisherList();
 		CategoryList categoryList = new CategoryList();
-		
-		authorList.load_fromDatabase(null);
-		publisherList.load_fromDatabase(null);
-		categoryList.load_fromDatabase(null);
 
-		Author author = authorList.getAuthorByID(1);
-		Publisher publisher = publisherList.getPublisherByID(1);
-		CategoryList categories = new CategoryList();
-		categories.add(categoryList.getCategoryByID(1));
+		BookList bList = new BookList();
+		bList.loadBooks_fromDatabase(null, publisherList, authorList, categoryList);
 
-		Book book = new Book(40, "Minh", "1234567890123", "Vietnamese", 900, publisher, author, categories);
-
-		// author.setName("He he");
-		// System.out.println(author.update_toDatabase());
-
-		author.setId(50);
-		author.add_toDatabase();
-
-		// System.out.println(book);
-		// System.out.println(book.add_toDatabase());
-		// book.update_toDatabase();
-		// book.delete_toDatabase();
+		Book book = bList.getBookById(1);
+		book.setId(31);
+		// System.out.println(book.delete_toDatabase());
+		// book.setStatus(false);
+		// book.add_toDatabase();
 	}
 }

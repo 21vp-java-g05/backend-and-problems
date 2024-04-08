@@ -20,7 +20,7 @@ public class BookList {
 		return null;
 	}
 
-	public ArrayList<Book> loadBooks_fromDatabase(String name, PublisherList publishers, AuthorList authors, CategoryList categories) {
+	public boolean loadBooks_fromDatabase(String name, PublisherList publishers, AuthorList authors, CategoryList categories) {
 		String condition = name == null || name.isEmpty() ? null : ("title LIKE '%" + name + "%'");
 		books = new ArrayList<Book>();
 		
@@ -49,6 +49,7 @@ public class BookList {
 						CategoriesEachBook.add(categories.getCategoryByID(resultSet.getInt("category_id")));
 				} catch (SQLException e) {
 					System.err.println("Error loading categories for each book");
+					return false;
 				}
 
 				Book book = new Book(id, title, isbn, language, numberOfPages, publishers.getPublisherByID(publisherID), authors.getAuthorByID(authorID), CategoriesEachBook, status);
@@ -56,8 +57,9 @@ public class BookList {
 			}
 		} catch (SQLException e) {
 			System.err.println("Error loading books");
+			return false;
 		}
-		return books;
+		return true;
 	}
 
 	@Override

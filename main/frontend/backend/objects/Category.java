@@ -39,10 +39,10 @@ public class Category {
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
 		String value = "(" + this.toString() + ")";
-		int rs = db.add("AUTHOR", value);
+		int rs = db.add("CATEGORY", value);
 		if (rs < 1) {
 			if (rs == 0)
-				System.err.println("This author is already in the database");
+				System.err.println("This category is already in the database");
 			return false;
 		}
 		

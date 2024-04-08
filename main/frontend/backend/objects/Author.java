@@ -54,7 +54,6 @@ public class Author {
 		String value = "name = '" + name + "', description = '" + description + "', status = " + String.valueOf(status);
 		String condition = "id = " + String.valueOf(id);
 
-		System.out.println(value);
 		try {
 			db.turnAutoCommitOff();
 			int rs = db.update("AUTHOR", value, condition);

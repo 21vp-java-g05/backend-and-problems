@@ -69,23 +69,15 @@ public class Book {
 		String value = "(" + this.toString() + ")";
 		
 		try {
-			db.turnAutoCommitOff();
-			int rs = db.add("BOOK", value);
-			if (rs < 1) {
-				if (rs == 0)
-					System.err.println("This book is already in the database");
-				return false;
-			}
-
 			// Check status of author, publisher and category and change book's status
-			// if (status) {
-			// 	if (
-			// 		! db.view(null, "AUTHOR", "id = " + String.valueOf(author)).getBoolean("status") ||
-			// 		! db.view(null, "Publisher", "id = " + String.valueOf(publisher)).getBoolean("status")
-			// 	) {
+			if (status) {
+				if (
+					! db.view(null, "AUTHOR", "id = " + String.valueOf(author)).getBoolean("status") ||
+					! db.view(null, "Publisher", "id = " + String.valueOf(publisher)).getBoolean("status")
+				) {
 					status = false;
 					System.out.println("Status is changed into false");
-				// } else {
+				} else {
 					try {
 						ResultSet result = db.view("status", "CATEGORY, CATEGORY_BOOK", "id = category_id AND book_id = " + String.valueOf(id));
 						while (result.next()) {
@@ -98,11 +90,18 @@ public class Book {
 					} catch (SQLException e) {
 						System.err.println("Check category status");
 						e.printStackTrace();
-						db.rollback();
 						return false;
 					}
-				// }
-			// }
+				}
+			}
+
+			db.turnAutoCommitOff();
+			int rs = db.add("BOOK", value);
+			if (rs < 1) {
+				if (rs == 0)
+					System.err.println("This book is already in the database");
+				return false;
+			}
 
 			String id_Str = String.valueOf(id);
 			value = "";
@@ -164,7 +163,7 @@ public class Book {
 			int rs = db.delete("BOOK", condition);
 			if (rs <= 0) {
 				if (rs == 0)
-					System.err.println("Cannot found author");
+					System.err.println("Cannot found book");
 				db.rollback();
 				return false;
 			}
