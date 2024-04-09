@@ -49,6 +49,6 @@ public class Main {
 		// book.setId(31);
 		// System.out.println(book.delete_toDatabase());
 		// book.setStatus(false);
-		// book.add_toDatabase();
+		book.add_toDatabase();
 	}
 }
