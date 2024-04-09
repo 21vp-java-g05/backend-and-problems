@@ -2,11 +2,11 @@ package main.frontend.backend.utils;
 
 import java.sql.*;
 
-public class DBconnect {
+public class DBconnect implements AutoCloseable{
 	private static final String DRIVER = "org.postgresql.Driver";
-	private static final String URL = "jdbc:postgresql:Book_store";
+	private static final String URL = "jdbc:postgresql:lmaotrachdong";
 	private static final String USER = "postgres";
-	private static final String PASSWORD = "03102003Minh";
+	private static final String PASSWORD = "Cyderglxk03";
 
 	private static Connection connection;
 

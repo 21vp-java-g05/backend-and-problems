@@ -1,6 +1,7 @@
 {
 	"java.project.referencedLibraries": [
 		"lib/**/*.jar",
-		"d:\\project\\javafx-book-store-system-desktop-app\\jar_files\\postgresql-42.7.3.jar"
+		"d:\\project\\javafx-book-store-system-desktop-app\\jar_files\\postgresql-42.7.3.jar",
+		"c:\\Users\\phamn\\Downloads\\postgresql-42.7.3 (1).jar"
 	]
 }
