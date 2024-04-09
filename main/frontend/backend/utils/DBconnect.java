@@ -4,9 +4,9 @@ import java.sql.*;
 
 public class DBconnect {
 	private static final String DRIVER = "org.postgresql.Driver";
-	private static final String URL = "jdbc:postgresql:Book_store";
-	private static final String USER = "postgres";
-	private static final String PASSWORD = "03102003Minh";
+	private static final String URL = "jdbc:postgresql:" + System.getProperty("DB_URL");
+	private static final String USER = System.getProperty("DB_USER");
+	private static final String PASSWORD = System.getProperty("DB_PASSWORD");
 
 	private static Connection connection;
 
@@ -43,17 +43,6 @@ public class DBconnect {
 		}
 		
 		return rs;
-	}
-	private int checkExists(String object, String condition) {
-		int count = 0;
-		try {
-			while (view(null, object, condition).next()) count++;
-		} catch (SQLException e) {
-			System.err.println("Check exits");
-			e.printStackTrace();
-			return -1;
-		}
-		return count;
 	}
 	public int add(String object, String value) {
 		String query = "INSERT INTO " + object + " VALUES " + value;
