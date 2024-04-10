@@ -23,22 +23,23 @@ public class Main {
 		categories.add(categoryList.getCategoryByID(1));
 		Book book = new Book(65, "Minh", "1234567890223", "Vietnamese", 900, publisher, author, categories);
 
-		Account a1 = new Account(1, "cyderxxv", "Cyderxxv03", "phamnguyengiakhiem@gmail.com", "Pham Nguyen Gia Khiem", 1);
-		System.out.println("Account 1:");
-        System.out.println(a1);
-        System.out.println();
+		// Account a1 = new Account(1, "cyderxxv", "Cyderxxv03", "phamnguyengiakhiem@gmail.com", "Pham Nguyen Gia Khiem", 1);
+		// System.out.println("Account 1:");
+        // System.out.println(a1);
+        // System.out.println();
 
-		a1.add_toDatabase();
 
-		Account account2 = new Account(a1);
+		Account a2 = new Account(25, "Pham Nguyen Gia Khiem", "pngkhiem21@vp.fitus.edu.vn", "cyderxda", "Cyderglxk03", 1);
         System.out.println("Account 2 (copy of Account 1):");
-        System.out.println(account2);
+        System.out.println(a2);
         System.out.println();
 
-		String hashedPassword = a1.hashPassword("Cyderxxv03");
+		a2.add_toDatabase();
+
+		String hashedPassword = a2.hashPassword("Cyderglxk03");
         System.out.println("Hashed password: " + hashedPassword);
 		
-		boolean isLoggedIn = a1.login("cyderxxv", "Cyderxxv03");
+		boolean isLoggedIn = a2.login("cyderxda", "Cyderglxk03");
 		System.out.println("Login successed is " + isLoggedIn);
 		// book.add_toDatabase();
 		// System.out.println(book.add_toDatabase());
@@ -49,6 +50,6 @@ public class Main {
 		// book.setId(31);
 		// System.out.println(book.delete_toDatabase());
 		// book.setStatus(false);
-		book.add_toDatabase();
+		// book.add_toDatabase();
 	}
 }

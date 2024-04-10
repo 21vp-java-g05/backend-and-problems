@@ -15,7 +15,7 @@ public class Account {
 	private String username, password, mail, fullname;
 	private boolean enabled;
 
-	public Account(int id, String username, String password, String mail, String fullname, int role, boolean enabled) {
+	public Account(int id, String fullname, String mail, String username, String password, int role, boolean enabled) {
 		this.id = id;
 		this.username = username;
 		this.password = hashPassword(password);
@@ -24,8 +24,8 @@ public class Account {
 		this.enabled = enabled;
 		this.role = role;
 	}
-	public Account(int id, String username, String password, String mail, String fullname, int role) { this(id, username, password, mail, fullname, role, true); }
-	public Account(Account other) { this(other.id, other.username, other.password, other.mail, other.fullname, other.role, other.enabled); }
+	public Account(int id, String fullname, String mail, String username, String password, int role) { this(id, fullname, mail, username, password, role, true); }
+	public Account(Account other) { this(other.id, other.fullname, other.mail, other.username, other.password, other.role, other.enabled); }
 
 	public int getId() { return id; }
 	public String getAccountUsername() { return username; }
@@ -35,7 +35,7 @@ public class Account {
 	public int getRole() {return role;}
 	public boolean isEnabled() { return enabled; }
 
-	public void changeInfo(int id, String username, String password, String mail, String fullname, boolean enabled, int role) {
+	public void changeInfo(int id, String fullname, String mail, String username, String password, int role, boolean enabled) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
@@ -46,14 +46,12 @@ public class Account {
 	}
 
 	public boolean login(String username, String password) {
-		try (DBconnect connection = new DBconnect()) {
+		try (DBconnect db = new DBconnect()) {
 			String hashedPassword = hashPassword(password);
-			String query = "SELECT * FROM ACCOUNT WHERE username = ? AND password = ?";
-			PreparedStatement ps = connection.getConnection().prepareStatement(query);
-			ps.setString(1, username);
-			ps.setString(2, hashedPassword);
-			ResultSet rs = ps.executeQuery();
-
+			String condition = "username = '" + username + "' AND password = '" + hashedPassword + "'";
+	
+			ResultSet rs = db.view("*", "ACCOUNT", condition);
+	
 			if (rs.next()) {
 				return true;
 			} else {
@@ -81,39 +79,34 @@ public class Account {
         }
     }
 
-    public boolean add_toDatabase() {
-        String object = "ACCOUNT(username, password, mail, status, fullname, role)";
-
-        String valuePlaceholder = "(?, ?, ?, ?, ?, ?)";
-
-        try (DBconnect db = new DBconnect()) {
-            PreparedStatement ps = db.getConnection().prepareStatement(
-                "INSERT INTO " + object + " VALUES " + valuePlaceholder
-            );
-
-
-            ps.setString(1, this.username);
-            ps.setString(2, this.password);
-            ps.setString(3, this.mail);
-            ps.setBoolean(4, this.enabled);
-			ps.setString(5, fullname);
-			ps.setInt(6, this.role);
-
-            int result = ps.executeUpdate();
-
-            if (result > 0) {
-                System.out.println("Account successfully added to database.");
-                return true;
-            } else {
-                System.out.println("Failed to add account to the database.");
-                return false;
-            }
-        } catch (SQLException e) {
-            System.err.println("An error occurred while adding the account to the database.");
-            e.printStackTrace();
-            return false;
-        }
-    }
+	public boolean add_toDatabase() {
+		String object = "ACCOUNT";
+		String values = "(" + this.id + ", '"
+							+ this.fullname.replace("'", "''") + "', '"
+							+ this.mail.replace("'", "''") + "', '"
+							+ this.username.replace("'", "''") + "', '"
+							+ this.password + "', "
+							+ this.role + ", "
+							+ this.enabled + ")";
+		
+		System.out.println("Values inserted: " + values);
+		
+		try (DBconnect db = new DBconnect()) {
+			int result = db.add(object, values);
+	
+			if (result > 0) {
+				System.out.println("Account successfully added to database.");
+				return true;
+			} else {
+				System.out.println("Failed to add account to the database.");
+				return false;
+			}
+		} catch (Exception e) {
+			System.err.println("An error occurred while adding the account to the database.");
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	@Override
 	public String toString() {
