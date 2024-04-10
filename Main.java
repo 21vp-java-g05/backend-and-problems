@@ -29,7 +29,7 @@ public class Main {
         // System.out.println();
 
 
-		Account a2 = new Account(25, "Pham Nguyen Gia Khiem", "pngkhiem21@vp.fitus.edu.vn", "cyderxda", "Cyderglxk03", 1);
+		Account a2 = new Account("Pham Nguyen Gia Khiem", "pngkhiem1112@vp.fitus.edu.vn", "t1cy2der2", "Cyderglxk03", 1);
         System.out.println("Account 2 (copy of Account 1):");
         System.out.println(a2);
         System.out.println();

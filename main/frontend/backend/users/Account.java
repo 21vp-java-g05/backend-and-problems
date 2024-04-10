@@ -15,8 +15,7 @@ public class Account {
 	private String username, password, mail, fullname;
 	private boolean enabled;
 
-	public Account(int id, String fullname, String mail, String username, String password, int role, boolean enabled) {
-		this.id = id;
+	public Account(String fullname, String mail, String username, String password, int role, boolean enabled) {
 		this.username = username;
 		this.password = hashPassword(password);
 		this.mail = mail;
@@ -24,8 +23,8 @@ public class Account {
 		this.enabled = enabled;
 		this.role = role;
 	}
-	public Account(int id, String fullname, String mail, String username, String password, int role) { this(id, fullname, mail, username, password, role, true); }
-	public Account(Account other) { this(other.id, other.fullname, other.mail, other.username, other.password, other.role, other.enabled); }
+	public Account(String fullname, String mail, String username, String password, int role) { this(fullname, mail, username, password, role, true); }
+	public Account(Account other) { this(other.fullname, other.mail, other.username, other.password, other.role, other.enabled); }
 
 	public int getId() { return id; }
 	public String getAccountUsername() { return username; }
@@ -81,7 +80,7 @@ public class Account {
 
 	public boolean add_toDatabase() {
 		String object = "ACCOUNT";
-		String values = "(" + this.id + ", '"
+		String values = "(DEFAULT, '"
 							+ this.fullname.replace("'", "''") + "', '"
 							+ this.mail.replace("'", "''") + "', '"
 							+ this.username.replace("'", "''") + "', '"
