@@ -7,15 +7,10 @@ import main.frontend.backend.utils.*;
 public class Main {
 	public static void main(String[] args) {
 		AuthorList aList = new AuthorList();
-		CategoryList cList = new CategoryList();
 		PublisherList pList = new PublisherList();
+		CategoryList cList = new CategoryList();
+		BookList bList = new BookList();
 
-		aList.load_fromDatabase(null);
-		cList.load_fromDatabase(null);
-		pList.load_fromDatabase(null);
-
-		System.out.println(aList);
-		System.out.println(cList);
-		System.out.println(pList);
+		bList.loadBooks_fromDatabase(null, pList, aList, cList);
 	}
 }

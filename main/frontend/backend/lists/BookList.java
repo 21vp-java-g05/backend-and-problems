@@ -21,30 +21,21 @@ public class BookList {
 	}
 
 	public boolean loadBooks_fromDatabase(String name, PublisherList publishers, AuthorList authors, CategoryList categories) {
-		String condition = name == null || name.isEmpty() ? null : ("title LIKE '%" + name + "%'");
-		books = new ArrayList<Book>();
-		
 		publishers.load_fromDatabase(null);
 		authors.load_fromDatabase(null);
 		categories.load_fromDatabase(null);
 		
+		books = new ArrayList<Book>();
 		DBconnect db = new DBconnect();
+		String condition = name == null || name.isEmpty() ? null : ("title LIKE '%" + name + "%'");
+		
 		try (ResultSet rs = db.view(null, "BOOK", condition);) {
 			while (rs.next()) {
-				// Get book info
 				int id = rs.getInt("id");
-				String title = rs.getString("title");
-				String isbn = rs.getString("isbn");
-				String language = rs.getString("language");
-				int numberOfPages = rs.getInt("number_of_pages");
-				int publisherID = rs.getInt("publisher");
-				int authorID = rs.getInt("author");
-				Boolean status = rs.getBoolean("status");
-
-				// Get categories for each book
 				CategoryList CategoriesEachBook = new CategoryList();
 				String condition1 = "book_id = " + String.valueOf(id);
-				try (ResultSet resultSet = db.view(null, "CATEGORY_BOOK", condition1);) {
+				
+				try (ResultSet resultSet = db.view("category_id", "CATEGORY_BOOK", condition1);) {
 					while (resultSet.next())
 						CategoriesEachBook.add(categories.getCategoryByID(resultSet.getInt("category_id")));
 				} catch (SQLException e) {
@@ -52,23 +43,29 @@ public class BookList {
 					return false;
 				}
 
-				Book book = new Book(id, title, isbn, language, numberOfPages, publishers.getPublisherByID(publisherID), authors.getAuthorByID(authorID), CategoriesEachBook, status);
+				Book book = new Book(
+					id, rs.getString("title"),
+					rs.getString("isbn"),
+					rs.getString("language"),
+					rs.getInt("number_of_pages"),
+					publishers.getPublisherByID(rs.getInt("publisher")),
+					authors.getAuthorByID(rs.getInt("author")),
+					CategoriesEachBook, rs.getBoolean("status")
+				);
 				books.add(book);
 			}
 		} catch (SQLException e) {
 			System.err.println("Error loading books");
 			return false;
-		}
+		} finally { db.close(); }
+		
 		return true;
 	}
 
 	@Override
 	public String toString() {
 		String str = "There are " + books.size() + " books in the list.\n\n";
-
-		for (Book book : books)
-			str += book.toString() + "\n";
-		
+		for (Book book : books) str += book.toString() + "\n";
 		return str;
 	}
 	

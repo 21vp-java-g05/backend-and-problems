@@ -1,4 +1,4 @@
-package main.frontend.backend.orders;
+package main.frontend.backend.users;
 
 public class Customer {
 	private int id;

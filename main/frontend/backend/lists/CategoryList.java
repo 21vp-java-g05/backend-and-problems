@@ -23,15 +23,15 @@ public class CategoryList {
 	public ArrayList<Category> getCategories() { return categories; }
 
 	public boolean load_fromDatabase(String name) {
-		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
-		DBconnect db = new DBconnect();
 		categories = new ArrayList<Category>();
+		DBconnect db = new DBconnect();
+		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
 		
 		try (ResultSet rs = db.view(null, "CATEGORY", condition);) {
 			while (rs.next())
 				categories.add(new Category(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getBoolean("status")));
 		} catch (SQLException e) {
-			System.err.println("Load category");
+			System.err.println("Load categories");
 			e.printStackTrace();
 			return false;
 		} finally { db.close(); }
@@ -42,10 +42,7 @@ public class CategoryList {
 	@Override
 	public String toString() {
 		String str = "There are " + categories.size() + " categories in the list.\n\n";
-
-		for (Category category : categories)
-			str += category.toString() + "\n";
-		
+		for (Category category : categories) str += category.toString() + "\n";
 		return str.toString();
 	}
 }

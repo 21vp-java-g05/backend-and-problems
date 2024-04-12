@@ -21,15 +21,15 @@ public class PublisherList {
 	}
 
 	public boolean load_fromDatabase(String name) {
-		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
-		DBconnect db = new DBconnect();
 		publishers = new ArrayList<Publisher>();
+		DBconnect db = new DBconnect();
+		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
 		
 		try (ResultSet rs = db.view(null, "PUBLISHER", condition);) {
 			while (rs.next())
 				publishers.add(new Publisher(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getBoolean("status")));
 		} catch (Exception e) {
-			System.err.println("Load publisher");
+			System.err.println("Load publishers");
 			e.printStackTrace();
 			return false;
 		} finally { db.close(); }
@@ -40,10 +40,7 @@ public class PublisherList {
 	@Override
 	public String toString() {
 		String str = "There are " + publishers.size() + " publishers in the list.\n\n";
-
-		for (Publisher publisher : publishers)
-			str += publisher.toString() + "\n";
-		
+		for (Publisher publisher : publishers) str += publisher.toString() + "\n";
 		return str;
 	}
 }

@@ -21,9 +21,9 @@ public class AuthorList {
 	}
 
 	public boolean load_fromDatabase(String name) {
-		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
-		DBconnect db = new DBconnect();
 		authors = new ArrayList<Author>();
+		DBconnect db = new DBconnect();
+		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
 		
 		try (ResultSet rs = db.view(null, "AUTHOR", condition);) {
 			while (rs.next())
@@ -40,10 +40,7 @@ public class AuthorList {
 	@Override
 	public String toString() {
 		String str = "There are " + authors.size() + " authors in the list.\n\n";
-
-		for (Author author : authors)
-			str += author.toString() + "\n";
-		
+		for (Author author : authors) str += author.toString() + "\n";
 		return str;
 	}
 }
