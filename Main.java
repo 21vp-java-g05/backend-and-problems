@@ -14,8 +14,11 @@ public class Main {
 		cList.load_fromDatabase(null);
 		pList.load_fromDatabase(null);
 
-		System.out.println(aList);
-		System.out.println(cList);
-		System.out.println(pList);
+		// System.out.println(aList);
+		// System.out.println(cList);
+		// System.out.println(pList);
+
+		Customer ct1 = new Customer("phamgaygiakhiem@gmail.com", "Pham Quyn Za Ziem", false);
+		ct1.add_toDatabase();
 	}
 }
