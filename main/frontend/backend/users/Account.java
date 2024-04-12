@@ -44,7 +44,7 @@ public class Account {
 		this.role = role;
 	}
 
-	public boolean login(String username, String password) {
+	public int login(String username, String password) {
 		try (DBconnect db = new DBconnect()) {
 			String hashedPassword = hashPassword(password);
 			String condition = "username = '" + username + "' AND password = '" + hashedPassword + "'";
@@ -52,14 +52,16 @@ public class Account {
 			ResultSet rs = db.view("*", "ACCOUNT", condition);
 	
 			if (rs.next()) {
-				return true;
+				int role = rs.getInt("role");
+            	System.out.println("Login successful. Role: " + role);
+            	return role;
 			} else {
 				System.out.println("Invalid username or password");
-				return false;
+				return -1;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return -1;
 		}
 	}
 

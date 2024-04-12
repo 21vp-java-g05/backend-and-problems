@@ -24,6 +24,7 @@ public class DBconnect implements AutoCloseable {
 	}
 
 	public void turnAutoCommitOff() throws SQLException { connection.setAutoCommit(false); }
+	public void turnAutoCommitOn() throws SQLException { connection.setAutoCommit(true); }
 	public void commit() throws SQLException { connection.commit(); }
 	public void rollback() throws SQLException { connection.rollback(); }
 
