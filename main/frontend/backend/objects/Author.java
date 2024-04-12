@@ -38,16 +38,16 @@ public class Author {
 
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
-		String value = "(" + this.toString() + ")";
+		String value = "(DEFAULT, " + this.toString() + ")";
 		int rs = db.add("AUTHOR", value);
-		if (rs < 1) {
-			if (rs == 0)
-				System.err.println("This author is already in the database");
-			return false;
-		}
-		
-		db.close();
-		return true;
+		try {
+			if (rs <= 0) {
+				if (rs == 0)
+					System.err.println("This author is already in the database");
+				return false;
+			}
+			return true;
+		} finally { db.close(); }
 	}
 	public boolean update_toDatabase() {
 		DBconnect db = new DBconnect();
@@ -82,18 +82,18 @@ public class Author {
 		DBconnect db = new DBconnect();
 		String condition = "id = " + String.valueOf(id);
 		int rs = db.delete("AUTHOR", condition);
-		if (rs <= 0) {
-			if (rs == 0)
-				System.err.println("Cannot found author");
-			return false;
-		}
-		
-		db.close();
-		return true;
+		try {
+			if (rs <= 0) {
+				if (rs == 0)
+					System.err.println("Cannot found author");
+				return false;
+			}
+			return true;
+		} finally { db.close(); }
 	}
 
 	@Override
 	public String toString() {		
-		return String.valueOf(id) + ", '" + name + "', '" + description + "', " + String.valueOf(status);
+		return "'" + name + "', '" + description + "', " + String.valueOf(status);
 	}
 }

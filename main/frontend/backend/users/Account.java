@@ -1,12 +1,7 @@
 package main.frontend.backend.users;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Connection;
-import java.lang.AutoCloseable;
+import java.security.*;
+import java.sql.*;
 
 import main.frontend.backend.utils.DBconnect;
 

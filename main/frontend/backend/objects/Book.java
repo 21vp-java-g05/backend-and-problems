@@ -66,7 +66,7 @@ public class Book {
 
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
-		String value = "(" + this.toString() + ")";
+		String value = "(DEFAULT, " + this.toString() + ")";
 		
 		try {
 			// Check status of author, publisher and category and change book's status
@@ -114,13 +114,12 @@ public class Book {
 				return false;
 			}
 			db.commit();
+			return true;
 		} catch (SQLException e) {
 			System.err.println("Add book");
 			e.printStackTrace();
 			return false;
 		} finally { db.close(); }
-		
-		return true;
 	}
 	public boolean update_toDatabase() {
 		DBconnect db = new DBconnect();
@@ -145,12 +144,13 @@ public class Book {
 			}
 			
 			db.commit();
+			return true;
 		} catch (SQLException e) {
 			System.err.println("Change status");
 			e.printStackTrace();
+			return false;
 		} finally { db.close(); }
 		
-		return true;
 	}
 	public boolean delete_toDatabase() {
 		DBconnect db = new DBconnect();
@@ -180,6 +180,6 @@ public class Book {
 
 	@Override
 	public String toString() {
-		return String.valueOf(id) + ", '" + title + "', '" + isbn + "', '" + language + "', " + String.valueOf(number_of_pages) + ", " + String.valueOf(publisher.getId()) + ", " + String.valueOf(author.getId()) + ", " + String.valueOf(status);
+		return "'" + title + "', '" + isbn + "', '" + language + "', " + String.valueOf(number_of_pages) + ", " + String.valueOf(publisher.getId()) + ", " + String.valueOf(author.getId()) + ", " + String.valueOf(status);
 	}
 }
