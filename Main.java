@@ -39,7 +39,7 @@ public class Main {
 		String hashedPassword = a2.hashPassword("Cyderglxk03");
         System.out.println("Hashed password: " + hashedPassword);
 		
-		boolean isLoggedIn = a2.login("cyderxda", "Cyderglxk03");
+		int isLoggedIn = a2.login("cyderxda", "Cyderglxk03");
 		System.out.println("Login successed is " + isLoggedIn);
 		// book.add_toDatabase();
 		// System.out.println(book.add_toDatabase());
