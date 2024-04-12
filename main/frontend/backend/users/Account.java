@@ -77,13 +77,7 @@ public class Account {
 
 	public boolean add_toDatabase() {
 		String object = "ACCOUNT";
-		String values = "(DEFAULT, '"
-							+ this.fullname.replace("'", "''") + "', '"
-							+ this.mail.replace("'", "''") + "', '"
-							+ this.username.replace("'", "''") + "', '"
-							+ this.password + "', "
-							+ this.role + ", "
-							+ this.enabled + ")";
+		String values = "(DEFAULT, " + this.toString() + ")";
 		
 		System.out.println("Values inserted: " + values);
 		
@@ -105,13 +99,7 @@ public class Account {
 	}
 
 	@Override
-	public String toString() {
-		String idStr = "\tID: " + id + "\n";
-		String nameStr = "\tUser name: " + username + "\n";
-		String disStr = "\tPassword: " + password + "\n";
-		String mailStr = "\tMail: " + mail + "\n";
-		String stsStr = "\tStatus: " + (enabled ? "enable" : "disable") + "\n";
-		
-		return idStr + nameStr + disStr + mailStr + stsStr;
+	public String toString() {		
+		return "'" + fullname + "', '" + mail + "', '" + username + "', '" + password + "', " + role + ", "  + enabled;
 	}
-}
+}	
