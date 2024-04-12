@@ -4,9 +4,9 @@ import java.sql.*;
 
 public class DBconnect implements AutoCloseable {
 	private static final String DRIVER = "org.postgresql.Driver";
-	private static final String URL = "jdbc:postgresql:" + System.getProperty("DB_URL");
-	private static final String USER = System.getProperty("DB_USER");
-	private static final String PASSWORD = System.getProperty("DB_PASSWORD");
+	private static final String URL = "jdbc:postgresql:" + System.getenv("DB_URL");
+	private static final String USER = System.getenv("DB_USER");
+	private static final String PASSWORD = System.getenv("DB_PASSWORD");
 
 	private static Connection connection;
 
