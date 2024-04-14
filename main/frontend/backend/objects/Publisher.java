@@ -40,14 +40,8 @@ public class Publisher {
 		DBconnect db = new DBconnect();
 		String value = "(DEFAULT, " + this.toString() + ")";
 		int rs = db.add("PUBLISHER", value);
-		try {
-			if (rs <= 0) {
-				if (rs == 0)
-					System.err.println("This author is already in the database");
-				return false;
-			}
-			return true;
-		} finally { db.close(); }
+		db.close();
+		return rs > 0;
 	}
 	public boolean update_toDatabase(int id) {
 		DBconnect db = new DBconnect();

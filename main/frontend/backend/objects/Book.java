@@ -67,6 +67,33 @@ public class Book {
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
 		String value = "(DEFAULT, " + this.toString() + ")";
+
+		// Check author, publisher, category exits
+		ResultSet aSet = db.view(null, "AUTHOR", "id = " + String.valueOf(author));
+		ResultSet pSet = db.view(null, "PUBLISHER", "id = " + String.valueOf(publisher));
+		ResultSet cSet = db.view(null, "CATEGORY", null);
+
+		try {
+			if (! aSet.next() || ! pSet.next() || ! cSet.next()) {
+				System.err.println("Cannot found reference of book");
+				db.close();
+				return false;
+			}
+		} catch (SQLException e) {
+			System.err.println("Error at finding reference of book: " + e.getMessage());
+			db.close();
+			return false;
+		}
+
+		// Check author, publisher, category status
+		try {
+			if (status) {
+			}
+		} catch (SQLException e) {
+			System.err.println("Error at checking status of book: " + e.getMessage());
+			db.close();
+			return false;
+		}
 		
 		try {
 			// Check status of author, publisher and category and change book's status
