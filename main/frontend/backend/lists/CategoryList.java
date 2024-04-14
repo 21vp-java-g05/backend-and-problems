@@ -31,11 +31,9 @@ public class CategoryList {
 			while (rs.next())
 				categories.add(new Category(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getBoolean("status")));
 		} catch (SQLException e) {
-			System.err.println("Load categories");
-			e.printStackTrace();
+			System.err.println("Error in loading categories: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
-
 		return true;
 	}
 

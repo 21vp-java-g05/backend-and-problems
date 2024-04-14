@@ -29,11 +29,9 @@ public class AuthorList {
 			while (rs.next())
 				authors.add(new Author(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getBoolean("status")));
 		} catch (SQLException e) {
-			System.err.println("Load authors");
-			e.printStackTrace();
+			System.err.println("Error in loading authors: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
-		
 		return true;
 	}
 	

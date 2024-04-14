@@ -39,23 +39,16 @@ public class Publisher {
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
 		String value = "(DEFAULT, " + this.toString() + ")";
-		int rs = db.add("PUBLISHER", value);
-		db.close();
-		return rs > 0;
+		try { return db.add("PUBLISHER", value) > 0; }
+		finally { db.close(); }
 	}
 	public boolean update_toDatabase(int id) {
 		DBconnect db = new DBconnect();
-		String value = "name = '" + name + "', description = '" + description + "', status = " + String.valueOf(status);
-		String condition = "id = " + String.valueOf(id);
-
 		try {
 			db.turnAutoCommitOff();
-			int rs = db.update("PUBLISHER", value, condition);
-			if (rs <= 0) {
-				if (rs == 0)
-					System.err.println("Publisher cannot found");
-				return false;
-			}
+			String value = "name = '" + name + "', description = '" + description + "', status = " + String.valueOf(status);
+			String condition = "id = " + String.valueOf(id);
+			if (db.update("PUBLISHER", value, condition) <= 0)  return false;
 
 			if (! status) {
 				condition = "publisher = " + String.valueOf(id) + " AND status = true";
@@ -64,26 +57,19 @@ public class Publisher {
 					return false;
 				}
 			}
-
 			db.commit();
 		} catch (SQLException e) {
-			System.err.println("Update publisher");
-			e.printStackTrace();
+			System.err.println("Error in updating publisher: " + e.getMessage());
+			return false;
 		} finally { db.close(); }
 		return true;
 	}
 	public boolean delete_toDatabase() {
 		DBconnect db = new DBconnect();
 		String condition = "id = " + String.valueOf(id);
-		int rs = db.delete("PUBLISHER", condition);
-		try {
-			if (rs <= 0) {
-				if (rs == 0)
-					System.err.println("Cannot found publisher");
-				return false;
-			}
-			return true;
-		} finally { db.close(); }
+		boolean rs = db.delete("PUBLISHER", condition) > 0;
+		db.close();
+		return rs;
 	}
 
 	@Override

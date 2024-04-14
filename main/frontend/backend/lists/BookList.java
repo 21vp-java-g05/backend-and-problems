@@ -35,6 +35,7 @@ public class BookList {
 				CategoryList CategoriesEachBook = new CategoryList();
 				String condition1 = "book_id = " + String.valueOf(id);
 				
+				// Load categories
 				try (ResultSet resultSet = db.view("category_id", "CATEGORY_BOOK", condition1);) {
 					while (resultSet.next())
 						CategoriesEachBook.add(categories.getCategoryByID(resultSet.getInt("category_id")));
@@ -43,6 +44,7 @@ public class BookList {
 					return false;
 				}
 
+				// Load books
 				Book book = new Book(
 					id, rs.getString("title"),
 					rs.getString("isbn"),
@@ -55,10 +57,9 @@ public class BookList {
 				books.add(book);
 			}
 		} catch (SQLException e) {
-			System.err.println("Error loading books");
+			System.err.println("Error in loading books: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
-		
 		return true;
 	}
 

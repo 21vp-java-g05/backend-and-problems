@@ -39,23 +39,16 @@ public class Category {
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
 		String value = "(DEFAULT, " + this.toString() + ")";
-		int rs = db.add("CATEGORY", value);
-		db.close();
-		return rs > 0;
+		try { return db.add("CATEGORY", value) > 0; }
+		finally { db.close(); }
 	}
 	public boolean update_toDatabase(int id) {
 		DBconnect db = new DBconnect();
-		String value = "name = '" + name + "', description = '" + description + "', status = " + String.valueOf(status);
-		String condition = "id = " + String.valueOf(id);
-
 		try {
 			db.turnAutoCommitOff();
-			int rs = db.update("CATEGORY", value, condition);
-			if (rs <= 0) {
-				if (rs == 0)
-					System.err.println("Category cannot found");
-				return false;
-			}
+			String value = "name = '" + name + "', description = '" + description + "', status = " + String.valueOf(status);
+			String condition = "id = " + String.valueOf(id);
+			if (db.update("CATEGORY", value, condition) <= 0) return false;
 
 			if (! status) {
 				condition = "book_id = id AND category_id = " + String.valueOf(id);
@@ -64,26 +57,19 @@ public class Category {
 					return false;
 				}
 			}
-
 			db.commit();
 		} catch (SQLException e) {
-			System.err.println("Update category");
-			e.printStackTrace();
+			System.err.println("Error in updating category: " + e.getMessage());
+			return false;
 		} finally { db.close(); }
 		return true;
 	}
 	public boolean delete_toDatabase() {
 		DBconnect db = new DBconnect();
 		String condition = "id = " + String.valueOf(id);
-		int rs = db.delete("CATEGORY", condition);
-		try {
-			if (rs <= 0) {
-				if (rs == 0)
-					System.err.println("Cannot found category");
-				return false;
-			}
-			return true;
-		} finally { db.close(); }
+		boolean rs = db.delete("CATEGORY", condition) > 0;
+		db.close();
+		return rs;
 	}
 	
 	@Override

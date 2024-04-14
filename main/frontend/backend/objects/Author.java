@@ -39,23 +39,16 @@ public class Author {
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
 		String value = "(DEFAULT, " + this.toString() + ")";
-		int rs = db.add("AUTHOR", value);
-		db.close();
-		return rs > 0;
+		try { return db.add("AUTHOR", value) > 0; }
+		finally { db.close(); }
 	}
 	public boolean update_toDatabase() {
 		DBconnect db = new DBconnect();
-		String value = "name = '" + name + "', description = '" + description + "', status = " + String.valueOf(status);
-		String condition = "id = " + String.valueOf(id);
-
 		try {
 			db.turnAutoCommitOff();
-			int rs = db.update("AUTHOR", value, condition);
-			if (rs <= 0) {
-				if (rs == 0)
-					System.err.println("Author cannot found");
-				return false;
-			}
+			String value = "name = '" + name + "', description = '" + description + "', status = " + String.valueOf(status);
+			String condition = "id = " + String.valueOf(id);
+			if (db.update("AUTHOR", value, condition) <= 0) return false;
 
 			if (! status) {
 				condition = "author = " + String.valueOf(id) + " AND status = true";
@@ -64,26 +57,19 @@ public class Author {
 					return false;
 				}
 			}
-
 			db.commit();
 		} catch (SQLException e) {
-			System.err.println("Update author");
-			e.printStackTrace();
+			System.err.println("Error in updating author: " + e.getMessage());
+			return false;
 		} finally { db.close(); }
 		return true;
 	}
 	public boolean delete_toDatabase() {
 		DBconnect db = new DBconnect();
 		String condition = "id = " + String.valueOf(id);
-		int rs = db.delete("AUTHOR", condition);
-		try {
-			if (rs <= 0) {
-				if (rs == 0)
-					System.err.println("Cannot found author");
-				return false;
-			}
-			return true;
-		} finally { db.close(); }
+		boolean rs = db.delete("AUTHOR", condition) > 0;
+		db.close();
+		return rs;
 	}
 
 	@Override
