@@ -12,3 +12,9 @@ Thêm Order::order()
 Thêm Employee::order()
 Thêm ImportSheetList::load_fromDatabase()
 Them OrderList::load_fromDatabase()
+
+View revenue statistics:
+  Book
+  Book category
+  Customer
+  Employee
