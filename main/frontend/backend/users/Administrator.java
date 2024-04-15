@@ -18,19 +18,22 @@ public class Administrator extends Account {
 		checkRole();
 	}
 
-	public AccountList load_fromDatabase() {
+	private void checkRole() {
+		if (role != 0) throw new IllegalArgumentException("Role must be administrator");
+	}
+
+	public AccountList loadAccount_fromDatabase() {
 		AccountList accounts = new AccountList();
 		return accounts.load_fromDatabase(null) ? accounts : null;
 	}
-	public boolean add_toDatabase(Account account) {
+	public boolean addAccount_toDatabase(Account account) {
 		DBconnect db = new DBconnect();
-		String value = "";
+		String value = "(DEFAULT, " + super.toString() + ")";
 		try { return db.add("ACCOUNT", value) > 0; }
 		finally { db.close(); }
 	}
-
-	private void checkRole() {
-		if (getRole() != 0) throw new IllegalArgumentException("Role must be administrator");
+	public boolean editAccount_fromDatabase(Account account) {
+		return account.updateAccount_toDatabase();
 	}
 
 	@Override

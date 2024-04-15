@@ -3,12 +3,13 @@ package main.frontend.backend.users;
 import java.security.*;
 import java.sql.*;
 
+import main.frontend.backend.lists.CustomerList;
 import main.frontend.backend.utils.DBconnect;
 
 public class Account {
-	private int id, role;
-	private String username, password, mail, fullname;
-	private boolean status;
+	protected int id, role;
+	protected String username, password, mail, fullname;
+	protected boolean status;
 
 	public Account(int id, String fullname, String mail, String username, String password, int role, boolean status) {
 		this.id = id;
@@ -59,7 +60,6 @@ public class Account {
 			return null;
 		} finally { db.close(); }
 	}
-
     public String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -73,6 +73,18 @@ public class Account {
             return null;
         }
     }
+
+	public CustomerList loadCustomer_fromDatabase() {
+		CustomerList customers = new CustomerList();
+		return customers.load_fromDatabase(null) ? customers : null;
+	}
+	public boolean updateAccount_toDatabase() {
+		DBconnect db = new DBconnect();
+		String value = "";
+		String condition = "id = " + String.valueOf(id);
+		try { return db.update("ACCOUNT", value, condition) > 0; }
+		finally { db.close(); }
+	}
 
 	@Override
 	public String toString() {		

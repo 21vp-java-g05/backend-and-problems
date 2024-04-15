@@ -19,6 +19,13 @@ public class Employee extends Account {
 		if (getRole() != 1) throw new IllegalArgumentException("Role must be employee");
 	}
 
+	public boolean addCustomer_toDatabase(Customer customer) {
+		return customer.add_toDatabase();
+	}
+	public boolean order() {
+		return true;
+	}
+
 	@Override
 	public String toString() {
 		String str = "Employee:" + "\n";
