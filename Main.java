@@ -1,8 +1,3 @@
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import javax.naming.spi.DirStateFactory.Result;
-
 import main.frontend.backend.lists.*;
 import main.frontend.backend.objects.*;
 import main.frontend.backend.orders.*;

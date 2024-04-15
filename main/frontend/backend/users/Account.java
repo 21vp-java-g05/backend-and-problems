@@ -4,6 +4,8 @@ import java.security.*;
 import java.sql.*;
 
 import main.frontend.backend.lists.CustomerList;
+import main.frontend.backend.lists.ImportSheetList;
+import main.frontend.backend.lists.OrderList;
 import main.frontend.backend.utils.DBconnect;
 
 public class Account {
@@ -41,6 +43,20 @@ public class Account {
 		this.role = role;
 	}
 
+    public String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashedBytes = md.digest(password.getBytes());
+            String sb = "";
+            for (byte b : hashedBytes)
+				sb += String.format("%02x", b);
+            return sb;
+        } catch (NoSuchAlgorithmException e) {
+            System.err.println("Error in hash: " + e.getMessage());
+            return null;
+        }
+    }
+
 	public Account login(String username, String password) {
 		DBconnect db = new DBconnect();
 		try {
@@ -60,21 +76,11 @@ public class Account {
 			return null;
 		} finally { db.close(); }
 	}
-    public String hashPassword(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hashedBytes = md.digest(password.getBytes());
-            String sb = "";
-            for (byte b : hashedBytes)
-				sb += String.format("%02x", b);
-            return sb;
-        } catch (NoSuchAlgorithmException e) {
-            System.err.println("Error in hash: " + e.getMessage());
-            return null;
-        }
-    }
+	public boolean logout() {
+		return true;
+	}
 
-	public CustomerList loadCustomer_fromDatabase() {
+	public CustomerList loadCustomers_fromDatabase() {
 		CustomerList customers = new CustomerList();
 		return customers.load_fromDatabase(null) ? customers : null;
 	}
@@ -84,6 +90,15 @@ public class Account {
 		String condition = "id = " + String.valueOf(id);
 		try { return db.update("ACCOUNT", value, condition) > 0; }
 		finally { db.close(); }
+	}
+
+	public ImportSheetList loadImportSheets_fromDatabase() {
+		ImportSheetList importSheets = new ImportSheetList();
+		return importSheets.load_fromDatabase(null) ? importSheets : null;
+	}
+	public OrderList loadOrders_fromDatabase() {
+		OrderList orders = new OrderList();
+		return orders.load_fromDatabase(null) ? orders : null;
 	}
 
 	@Override

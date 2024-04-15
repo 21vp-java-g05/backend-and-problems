@@ -25,7 +25,7 @@ public class AccountList {
 		DBconnect db = new DBconnect();
 		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
 		
-		try (ResultSet rs = db.view(null, "AUTHOR", condition);) {
+		try (ResultSet rs = db.view(null, "ACCOUNT", condition);) {
 			while (rs.next())
 				accounts.add(new Account(
 					rs.getInt("id"),
