@@ -4,6 +4,7 @@ import main.frontend.backend.lists.BookList;
 import main.frontend.backend.users.Employee;
 
 import java.sql.*;
+import java.io.*;
 import java.util.ArrayList;
 
 public class ImportSheet {
@@ -45,5 +46,32 @@ public class ImportSheet {
 		this.books = books;
 		this.quantity = quantity;
 		this.ImportPrice = ImportPrice;
+	}
+
+	public boolean load_fromFile(String FileName) {
+		try (BufferedReader reader = new BufferedReader(
+			new InputStreamReader(new FileInputStream(FileName), "UTF-8"))
+		) {
+		} catch (FileNotFoundException e) {
+			System.err.println("Cannot find file: " + e.getMessage());
+			return false;
+		} catch (UnsupportedEncodingException e) {
+			System.err.println("Encoding error: " + e.getMessage());
+			return false;
+		} catch (IOException e) {
+			System.err.println("Error in closing file: " + e.getMessage());
+			return false;
+		}
+		return true;
+	}
+
+	public boolean add_toDatabase() {
+		
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "";
 	}
 }

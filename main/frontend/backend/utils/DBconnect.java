@@ -44,7 +44,7 @@ public class DBconnect implements AutoCloseable {
 		ResultSet resultSet = view(null, object, condition);
 		try { return resultSet.next(); }
 		catch (SQLException e) {
-			System.err.println("Error in view: " + e.getMessage());
+			System.err.println("Error in checking exist: " + e.getMessage());
 			return false;
 		}
 	}
@@ -52,7 +52,7 @@ public class DBconnect implements AutoCloseable {
 		String query = "INSERT INTO " + object + " VALUES " + value;
 		try { return connection.createStatement().executeUpdate(query); }
 		catch (SQLException e) {
-			System.err.println("Error in add" + e.getMessage());
+			System.err.println("Error in add: " + e.getMessage());
 			return -1;
 		}
 	}
@@ -60,7 +60,7 @@ public class DBconnect implements AutoCloseable {
 		String query = "UPDATE " + object + " SET " + value + " WHERE " + condition;
 		try { return connection.createStatement().executeUpdate(query); }
 		catch (SQLException e) {
-			System.err.println("Error in update" + e.getMessage());
+			System.err.println("Error in update: " + e.getMessage());
 			return -1;
 		}
 	}
@@ -68,7 +68,7 @@ public class DBconnect implements AutoCloseable {
 		String query = "UPDATE " + object + " SET " + value + "FROM (" + sub + ")" + " WHERE " + condition;
 		try { return connection.createStatement().executeUpdate(query); }
 		catch (SQLException e) {
-			System.err.println("Error in update from" + e.getMessage());
+			System.err.println("Error in update from: " + e.getMessage());
 			return -1;
 		}
 	}
@@ -76,7 +76,7 @@ public class DBconnect implements AutoCloseable {
 		String query = "UPDATE " + object + " SET status = " + String.valueOf(status) + " WHERE " + condition;
 		try { return connection.createStatement().executeUpdate(query); }
 		catch (SQLException e) {
-			System.err.println("Error in change statusS" + e.getMessage());
+			System.err.println("Error in change status: " + e.getMessage());
 			return -1;
 		}
 	}
@@ -84,7 +84,7 @@ public class DBconnect implements AutoCloseable {
 		String query = "DELETE FROM " + object + " WHERE " + condition;
 		try { return connection.createStatement().executeUpdate(query); }
 		catch (SQLException e) {
-			System.err.println("Error in delete" + e.getMessage());
+			System.err.println("Error in delete: " + e.getMessage());
 			return -1;
 		}
 	}

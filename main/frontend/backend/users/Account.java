@@ -8,18 +8,19 @@ import main.frontend.backend.utils.DBconnect;
 public class Account {
 	private int id, role;
 	private String username, password, mail, fullname;
-	private boolean enabled;
+	private boolean status;
 
-	public Account(String fullname, String mail, String username, String password, int role, boolean enabled) {
+	public Account(int id, String fullname, String mail, String username, String password, int role, boolean status) {
+		this.id = id;
 		this.username = username;
 		this.password = hashPassword(password);
 		this.mail = mail;
 		this.fullname = fullname;
-		this.enabled = enabled;
+		this.status = status;
 		this.role = role;
 	}
-	public Account(String fullname, String mail, String username, String password, int role) { this(fullname, mail, username, password, role, true); }
-	public Account(Account other) { this(other.fullname, other.mail, other.username, other.password, other.role, other.enabled); }
+	public Account(int id, String fullname, String mail, String username, String password, int role) { this(id, fullname, mail, username, password, role, true); }
+	public Account(Account other) { this(other.id, other.fullname, other.mail, other.username, other.password, other.role, other.status); }
 
 	public int getId() { return id; }
 	public String getAccountUsername() { return username; }
@@ -27,79 +28,54 @@ public class Account {
 	public String getFullname() {return fullname;}
 	public String getMail() { return mail; }
 	public int getRole() {return role;}
-	public boolean isEnabled() { return enabled; }
+	public boolean getStatus() { return status; }
 
-	public void changeInfo(int id, String fullname, String mail, String username, String password, int role, boolean enabled) {
+	public void changeInfo(int id, String fullname, String mail, String username, String password, int role, boolean status) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.mail = mail;
 		this.fullname = fullname;
-		this.enabled = enabled;
+		this.status = status;
 		this.role = role;
 	}
 
-	public int login(String username, String password) {
-		try (DBconnect db = new DBconnect()) {
+	public Account login(String username, String password) {
+		DBconnect db = new DBconnect();
+		try {
 			String hashedPassword = hashPassword(password);
 			String condition = "username = '" + username + "' AND password = '" + hashedPassword + "'";
-	
-			ResultSet rs = db.view("*", "ACCOUNT", condition);
+			ResultSet rs = db.view(null, "ACCOUNT", condition);
 	
 			if (rs.next()) {
 				int role = rs.getInt("role");
             	System.out.println("Login successful. Role: " + role);
-            	return role;
-			} else {
-				System.out.println("Invalid username or password");
-				return -1;
+				return role == 0 ? new Administrator(this) : new Employee(this);
 			}
+			System.err.println("Invalid username or password");
+			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return -1;
-		}
+			return null;
+		} finally { db.close(); }
 	}
 
     public String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hashedBytes = md.digest(password.getBytes());
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hashedBytes) {
-                sb.append(String.format("%02x", b));
-            }
-            return sb.toString();
+            String sb = "";
+            for (byte b : hashedBytes)
+				sb += String.format("%02x", b);
+            return sb;
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            System.err.println("Error in hash: " + e.getMessage());
             return null;
         }
     }
 
-	public boolean add_toDatabase() {
-		String object = "ACCOUNT";
-		String values = "(DEFAULT, " + this.toString() + ")";
-		
-		System.out.println("Values inserted: " + values);
-		
-		try (DBconnect db = new DBconnect()) {
-			int result = db.add(object, values);
-	
-			if (result > 0) {
-				System.out.println("Account successfully added to database.");
-				return true;
-			} else {
-				System.out.println("Failed to add account to the database.");
-				return false;
-			}
-		} catch (Exception e) {
-			System.err.println("An error occurred while adding the account to the database.");
-			e.printStackTrace();
-			return false;
-		}
-	}
-
 	@Override
 	public String toString() {		
-		return "'" + fullname + "', '" + mail + "', '" + username + "', '" + password + "', " + role + ", "  + enabled;
+		return "'" + fullname + "', '" + mail + "', '" + username + "', '" + password + "', " + role + ", "  + status;
 	}
 }	

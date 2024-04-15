@@ -11,15 +11,7 @@ import main.frontend.backend.utils.*;
 
 public class Main {
 	public static void main(String[] args) {
-		DBconnect db = new DBconnect();
-		ResultSet resultSet = db.view(null, "AUTHOR", null);
-		
-		try {
-			System.out.println(resultSet.wasNull());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		db.close();
+		Employee e = new Employee(1, "Minh", "123", "123", "Minh", 1, true);
+		Administrator a = new Administrator(2, "Minh", "123", "123", "Minh", 0, true);
 	}
 }

@@ -8,14 +8,15 @@ public class Customer {
 	private boolean gender, status;
 
 	public Customer() {}
-	public Customer(String mail, String fullname, boolean gender, boolean status) {
+	public Customer(int id, String fullname, String mail, boolean gender, boolean status) {
+		this.id = id;
 		this.mail = mail;
 		this.fullname = fullname;
 		this.gender = gender;
 		this.status = status;
 	}
-	public Customer(String mail, String fullname, boolean gender) { this(mail, fullname, gender, true); }
-	public Customer(Customer other) { this(other.mail, other.fullname, other.gender, other.status); }
+	public Customer(int id, String fullname, String mail, boolean gender) { this(id, fullname, mail, gender, true); }
+	public Customer(Customer other) { this(other.id, other.mail, other.fullname, other.gender, other.status); }
 
 	public int getId() { return id; }
 	public String getMail() { return mail; }
@@ -32,15 +33,8 @@ public class Customer {
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
 		String value = "(DEFAULT, " + toString() + ")";
-		int rs = db.add("CUSTOMER", value);
-		try {
-			if (rs < 1) {
-				if (rs == 0)
-					System.err.println("This customer is already in the database");
-				return false;
-			}
-			return true;
-		} finally { db.close(); }
+		try { return db.add("CUSTOMER", value) > 0; }
+		finally { db.close(); }
 	}
 	
 	@Override

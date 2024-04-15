@@ -27,7 +27,12 @@ public class AuthorList {
 		
 		try (ResultSet rs = db.view(null, "AUTHOR", condition);) {
 			while (rs.next())
-				authors.add(new Author(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getBoolean("status")));
+				authors.add(new Author(
+					rs.getInt("id"),
+					rs.getString("name"),
+					rs.getString("description"),
+					rs.getBoolean("status")
+				));
 		} catch (SQLException e) {
 			System.err.println("Error in loading authors: " + e.getMessage());
 			return false;

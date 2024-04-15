@@ -29,7 +29,12 @@ public class CategoryList {
 		
 		try (ResultSet rs = db.view(null, "CATEGORY", condition);) {
 			while (rs.next())
-				categories.add(new Category(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getBoolean("status")));
+				categories.add(new Category(
+					rs.getInt("id"),
+					rs.getString("name"),
+					rs.getString("description"),
+					rs.getBoolean("status")
+				));
 		} catch (SQLException e) {
 			System.err.println("Error in loading categories: " + e.getMessage());
 			return false;
