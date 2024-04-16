@@ -36,14 +36,14 @@ public class Account {
 	public void changeInfo(int id, String fullname, String mail, String username, String password, int role, boolean status) {
 		this.id = id;
 		this.username = username;
-		this.password = password;
+		this.password = hashPassword(password);
 		this.mail = mail;
 		this.fullname = fullname;
 		this.status = status;
 		this.role = role;
 	}
 
-    public String hashPassword(String password) {
+    private String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hashedBytes = md.digest(password.getBytes());
@@ -84,9 +84,12 @@ public class Account {
 		CustomerList customers = new CustomerList();
 		return customers.load_fromDatabase(null) ? customers : null;
 	}
+	public boolean addCustomer_toDatabase(Customer customer) {
+		return customer.add_toDatabase();
+	}
 	public boolean updateAccount_toDatabase() {
 		DBconnect db = new DBconnect();
-		String value = "";
+		String value = "fullname = '" + fullname + "', mail = '" + mail + "', username = '" + username + "', password = '" + password + "', role = " + String.valueOf(role) + ", status = " + String.valueOf(status);
 		String condition = "id = " + String.valueOf(id);
 		try { return db.update("ACCOUNT", value, condition) > 0; }
 		finally { db.close(); }
@@ -103,6 +106,6 @@ public class Account {
 
 	@Override
 	public String toString() {		
-		return "'" + fullname + "', '" + mail + "', '" + username + "', '" + password + "', " + role + ", "  + status;
+		return "'" + fullname + "', '" + mail + "', '" + username + "', '" + password + "', " + String.valueOf(role) + ", "  + String.valueOf(status);
 	}
 }	

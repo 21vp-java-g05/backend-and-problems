@@ -2,6 +2,7 @@ package main.frontend.backend.orders;
 
 import main.frontend.backend.lists.BookList;
 import main.frontend.backend.users.Employee;
+import main.frontend.backend.utils.DBconnect;
 
 import java.sql.*;
 import java.io.*;
@@ -67,6 +68,11 @@ public class ImportSheet {
 	}
 
 	public boolean add_toDatabase() {
+		DBconnect db = new DBconnect();
+		String value = "(DEFAULT, " + "" + ")";
+		try {
+
+		} finally { db.close(); }
 		return true;
 	}
 

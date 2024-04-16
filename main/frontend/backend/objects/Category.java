@@ -38,7 +38,7 @@ public class Category {
 
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
-		String value = "(DEFAULT, " + this.toString() + ")";
+		String value = "(DEFAULT, " + toString() + ")";
 		try { return db.add("CATEGORY", value) > 0; }
 		finally { db.close(); }
 	}

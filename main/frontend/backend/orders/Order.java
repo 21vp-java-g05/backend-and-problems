@@ -4,6 +4,7 @@ import main.frontend.backend.users.Customer;
 
 import main.frontend.backend.lists.BookList;
 import main.frontend.backend.users.Employee;
+import main.frontend.backend.utils.DBconnect;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -51,5 +52,11 @@ public class Order {
 		this.quantity = quantity;
 		this.ImportPrice = ImportPrice;
 		this.customer = customer;
+	}
+
+	public boolean add_toDatabase() {
+		DBconnect db = new DBconnect();
+		try { return true; }
+		finally { db.close(); }
 	}
 }

@@ -28,7 +28,7 @@ public class Administrator extends Account {
 	}
 	public boolean addAccount_toDatabase(Account account) {
 		DBconnect db = new DBconnect();
-		String value = "(DEFAULT, " + super.toString() + ")";
+		String value = "(DEFAULT, " + account.toString() + ")";
 		try { return db.add("ACCOUNT", value) > 0; }
 		finally { db.close(); }
 	}

@@ -82,7 +82,7 @@ public class Book {
 					value1 = value1.substring(0, value1.length() - 2);
 
 				// Starting add to database
-				String value = "(DEFAULT, " + this.toString() + ")";
+				String value = "(DEFAULT, " + toString() + ")";
 				if (
 					db.add("BOOK", value) <= 0 ||
 					(categories != null && db.add("CATEGORY_BOOK", value1) <= 0)
