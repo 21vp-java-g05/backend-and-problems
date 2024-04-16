@@ -10,3 +10,10 @@ Thêm ImportSheetList::load_fromDatabase()
 Thêm Order::add_toDatabase()
 Them OrderList::load_fromDatabase()
 Thêm Employee::order()
+Thêm OrderList::load_fromDatabase()
+
+View revenue statistics:
+	Book
+	Book category
+	Customer
+	Employee
