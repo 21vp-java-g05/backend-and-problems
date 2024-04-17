@@ -59,7 +59,7 @@ public class Category {
 			}
 			db.commit();
 		} catch (SQLException e) {
-			System.err.println("Error in updating category: " + e.getMessage());
+			System.err.println("Error while connecting to database in updating category: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;

@@ -46,17 +46,27 @@ public class Order {
 	public void changeInfo(int id, Date OrderTime, Employee employee, float SalesPrice, BookList books, ArrayList<Integer> quantity, ArrayList<Float> ImportPrice, Customer customer) {
 		this.id = id;
 		this.OrderTime = OrderTime;
-		this.employee = employee;
+		if (employee != null) this.employee = employee;
 		this.SalesPrice = SalesPrice;
-		this.books = books;
-		this.quantity = quantity;
-		this.ImportPrice = ImportPrice;
-		this.customer = customer;
+		if (books != null) this.books = books;
+		if (quantity != null) this.quantity = quantity;
+		if (ImportPrice != null) this.ImportPrice = ImportPrice;
+		if (employee != null) this.customer = customer;
 	}
 
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
-		try { return true; }
-		finally { db.close(); }
+		try {
+			db.turnAutoCommitOff();
+			// Add to Orders
+			
+
+			// Add to Orders_Book
+			db.commit();
+		} catch (SQLException e) {
+			System.err.println("Error while connecting to database in add order: " + e.getMessage());
+			return false;
+		} finally { db.close(); }
+		return true;
 	}
 }

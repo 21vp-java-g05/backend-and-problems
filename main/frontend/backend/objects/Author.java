@@ -59,7 +59,7 @@ public class Author {
 			}
 			db.commit();
 		} catch (SQLException e) {
-			System.err.println("Error in updating author: " + e.getMessage());
+			System.err.println("Error while connecting to database in updating author: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;

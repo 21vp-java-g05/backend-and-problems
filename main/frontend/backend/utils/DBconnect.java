@@ -56,6 +56,20 @@ public class DBconnect implements AutoCloseable {
 			return -1;
 		}
 	}
+	public int add_getAuto(String object, String value) {
+		String query = "INSERT INTO " + object + " VALUES " + value;
+		try {
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+			
+			ResultSet rs = statement.getGeneratedKeys();
+			return rs.next() ? rs.getInt(1) : 0;
+		}
+		catch (SQLException e) {
+			System.err.println("Error in add: " + e.getMessage());
+			return -1;
+		}
+	}
 	public int update(String object, String value, String condition) {
 		String query = "UPDATE " + object + " SET " + value + " WHERE " + condition;
 		try { return connection.createStatement().executeUpdate(query); }

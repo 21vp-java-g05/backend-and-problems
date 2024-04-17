@@ -7,10 +7,10 @@ Thêm ImportSheet::toString()
 Thêm ImportSheet::add_toDatabase()
 Thêm ImportSheet::load_fromFile()
 Thêm ImportSheetList::load_fromDatabase()
+Thêm Order::inputBooks()
 Thêm Order::add_toDatabase()
 Them OrderList::load_fromDatabase()
 Thêm Employee::order()
-Thêm OrderList::load_fromDatabase()
 
 View revenue statistics:
 	Book

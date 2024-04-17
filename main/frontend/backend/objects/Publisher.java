@@ -59,7 +59,7 @@ public class Publisher {
 			}
 			db.commit();
 		} catch (SQLException e) {
-			System.err.println("Error in updating publisher: " + e.getMessage());
+			System.err.println("Error while connecting to database in updating publisher: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;

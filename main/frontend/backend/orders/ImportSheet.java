@@ -42,11 +42,11 @@ public class ImportSheet {
 	public void changeInfo(int id, Date ImportTime, Employee employee, float TotalCost, BookList books, ArrayList<Integer> quantity, ArrayList<Float> ImportPrice) {
 		this.id = id;
 		this.ImportTime = ImportTime;
-		this.employee = employee;
+		if (employee != null) this.employee = employee;
 		this.TotalCost = TotalCost;
-		this.books = books;
-		this.quantity = quantity;
-		this.ImportPrice = ImportPrice;
+		if (books != null) this.books = books;
+		if (quantity != null) this.quantity = quantity;
+		if (ImportPrice != null) this.ImportPrice = ImportPrice;
 	}
 
 	public boolean load_fromFile(String FileName) {
@@ -69,9 +69,15 @@ public class ImportSheet {
 
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
-		String value = "(DEFAULT, " + "" + ")";
 		try {
+			db.turnAutoCommitOff();
+			// Add to Imports
 
+
+			// Add to Imports_Book
+			db.commit();
+		} catch (SQLException e) {
+			System.err.println("Error while connecting to database in add import sheet: " + e.getMessage());
 		} finally { db.close(); }
 		return true;
 	}
