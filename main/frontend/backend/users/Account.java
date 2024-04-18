@@ -47,10 +47,11 @@ public class Account {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hashedBytes = md.digest(password.getBytes());
-            String sb = "";
-            for (byte b : hashedBytes)
-				sb += String.format("%02x", b);
-            return sb;
+            
+			String sb = "";
+            for (byte b : hashedBytes) sb += String.format("%02x", b);
+            
+			return sb;
         } catch (NoSuchAlgorithmException e) {
             System.err.println("Error in hash: " + e.getMessage());
             return null;
@@ -64,11 +65,8 @@ public class Account {
 			String condition = "username = '" + username + "' AND password = '" + hashedPassword + "'";
 			ResultSet rs = db.view(null, "ACCOUNT", condition);
 	
-			if (rs.next()) {
-				int role = rs.getInt("role");
-            	System.out.println("Login successful. Role: " + role);
-				return role == 0 ? new Administrator(this) : new Employee(this);
-			}
+			if (rs.next())
+				return rs.getInt("role") == 0 ? new Administrator(this) : new Employee(this);
 			System.err.println("Invalid username or password");
 			return null;
 		} catch (SQLException e) {

@@ -53,7 +53,7 @@ public class ImportSheet {
 		try (BufferedReader reader = new BufferedReader(
 			new InputStreamReader(new FileInputStream(FileName), "UTF-8"))
 		) {
-
+			
 		} catch (FileNotFoundException e) {
 			System.err.println("Cannot find file: " + e.getMessage());
 			return false;
@@ -80,10 +80,5 @@ public class ImportSheet {
 			System.err.println("Error while connecting to database in add import sheet: " + e.getMessage());
 		} finally { db.close(); }
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "";
 	}
 }

@@ -1,17 +1,21 @@
-# backend-and-problems
-Nhớ add driver vào Reference Libraries (https://jdbc.postgresql.org/download/)
-Test code ở Main.java
-Không test book.java
+# BACKEND AND PROBLEMS
+## Note
+* Add driver vào Reference Libraries (https://jdbc.postgresql.org/download/)
+* Test code ở Main.java
 
-Thêm ImportSheet::toString()
-Thêm ImportSheet::add_toDatabase()
-Thêm ImportSheet::load_fromFile()
-Thêm ImportSheetList::load_fromDatabase()
-Thêm Order::add_toDatabase()
-Them OrderList::load_fromDatabase()
+## To do list
+### Minh
+* Thêm ImportSheet::add_toDatabase()
+* Thêm ImportSheet::load_fromFile()
+* Thêm Order::add_toDatabase()
 
-View revenue statistics:
-	Book
-	Book category
-	Customer
-	Employee
+### Khiêm
+* Thêm ImportSheetList::load_fromDatabase()
+* Thêm OrderList::load_fromDatabase()
+
+### Chưa xác định
+* View revenue statistics in a week, a month or from date to date:
+	* Book
+	* Book category
+	* Customer
+	* Employee

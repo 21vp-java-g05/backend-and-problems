@@ -36,6 +36,19 @@ public class Administrator extends Account {
 		return account.updateAccount_toDatabase();
 	}
 
+	public void revenue_fromBook() {
+
+	}
+	public void revenue_fromCategory() {
+		
+	}
+	public void revenue_fromCustomer() {
+		
+	}
+	public void revenue_fromEmployee() {
+		
+	}
+
 	@Override
 	public String toString() {
 		String str = "Administrator:" + "\n";
