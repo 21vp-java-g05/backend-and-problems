@@ -14,6 +14,7 @@ public class PublisherList {
 
 	public void add(Publisher publisher) { publishers.add(publisher); }
 	public void clear() { publishers.clear(); }
+	public int size() { return publishers.size(); }
 	public Publisher getPublisherByID(int id) {
 		for (Publisher publisher : publishers)
 			if (publisher.getId() == id) return publisher;

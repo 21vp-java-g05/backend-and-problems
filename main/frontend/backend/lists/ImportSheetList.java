@@ -14,6 +14,7 @@ public class ImportSheetList {
 	
 	public void add(ImportSheet importSheet) { importSheets.add(importSheet); }
 	public void clear() { importSheets.clear(); }
+	public int size() { return importSheets.size(); }
 	public ImportSheet getAuthorByID(int id) {
 		for (ImportSheet importSheet : importSheets)
 			if (importSheet.getId() == id) return importSheet;

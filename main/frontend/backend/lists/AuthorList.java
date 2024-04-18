@@ -14,6 +14,7 @@ public class AuthorList {
 	
 	public void add(Author author) { authors.add(author); }
 	public void clear() { authors.clear(); }
+	public int size() { return authors.size(); }
 	public Author getAuthorByID(int id) {
 		for (Author author : authors)
 			if (author.getId() == id) return author;

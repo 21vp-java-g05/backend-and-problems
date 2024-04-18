@@ -14,6 +14,7 @@ public class BookList {
 
 	public void add(Book book) { books.add(book); }
 	public void clear() { books.clear(); }
+	public int size() { return books.size(); }
 	public Book getBookById(int id) {
 		for (Book book : books)
 			if (book.getId() == id) return book;

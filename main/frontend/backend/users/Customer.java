@@ -36,6 +36,12 @@ public class Customer {
 		try { return db.add("CUSTOMER", value) > 0; }
 		finally { db.close(); }
 	}
+	public boolean check() {
+		DBconnect db = new DBconnect();
+		try {
+			return db.checkExists("CUSTOMER", "mail = " + mail) ? true : add_toDatabase();
+		} finally { db.close(); }
+	}
 	
 	@Override
 	public String toString() {

@@ -14,6 +14,7 @@ public class OrderList {
 	
 	public void add(Order author) { orders.add(author); }
 	public void clear() { orders.clear(); }
+	public int size() { return orders.size(); }
 	public Order getAuthorByID(int id) {
 		for (Order order : orders)
 			if (order.getId() == id) return order;
