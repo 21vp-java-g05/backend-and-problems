@@ -1,4 +1,7 @@
 import main.frontend.backend.objects.*;
+import main.frontend.backend.lists.*;
+import main.frontend.backend.orders.ImportSheet;
+import main.frontend.backend.orders.Order;
 
 import java.sql.ResultSet;
 
@@ -6,29 +9,31 @@ import main.frontend.backend.lists.*;
 
 public class Main {
 	public static void main(String[] args) {
-		Publisher publisher = new Publisher(1, "Test Publisher", "shit", true);
-        Author author = new Author(1, "Test Author", "test@author.com");
-        CategoryList categories = new CategoryList();
-        categories.add(new Category(1, "Test Category", "?"));
+        ImportSheetList importSheetList = new ImportSheetList();
+        OrderList orderList = new OrderList();
 
-        // Assuming the Book constructor signature matches your actual implementation
-        Book testBook = new Book(0, "Test Book", "123456789", "English", 300, publisher, author, categories, true);
-
-        // Attempt to add the book to the database
-        boolean result = testBook.add_toDatabase();
-
-        // Print result
-        if (result) {
-            System.out.println("Book added to database successfully.");
+        if(importSheetList.load_fromDatabase(null)) {
+            System.out.println("Import sheets loaded from database:");
+            for (int i = 0; i < importSheetList.size(); i++) {
+                ImportSheet importSheet = importSheetList.getAuthorByID(i + 1);
+                if (importSheet != null) {
+                    System.out.println("ID: " + importSheet.getId() + " Timestamp: " + importSheet.getImportTime() + " TotalPrice: " + importSheet.getTotalCost());
+                }
+            }
         } else {
-            System.out.println("Failed to add book to database.");
+            System.out.println("Failed to load import sheets from database.");
         }
 
-		// ResultSet a = null;
-		// try {
-		// 	System.out.println(a.next());
-		// } catch (Exception e) {
-		// 	e.printStackTrace();
-		// }
+        if(orderList.load_fromDatabase(null)) {
+            System.out.println("Orders loaded from database:");
+            for (int i = 0; i < orderList.size(); i++) {
+                Order order = orderList.getAuthorByID(i + 1);
+                if (order != null) {
+                    System.out.println("ID: " + order.getId() + " Order Time: " + order.getOrderTime() + " Sales Price: " + order.getSalesPrice());
+                }
+            }
+        } else {
+            System.out.println("Failed to load orders from database.");
+        }
 	}
 }

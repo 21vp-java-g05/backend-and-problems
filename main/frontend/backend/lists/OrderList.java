@@ -26,10 +26,17 @@ public class OrderList {
 		DBconnect db = new DBconnect();
 		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
 		
-		try (ResultSet rs = db.view(null, "", condition);) {
+		try (ResultSet rs = db.view(null, "ORDERS", condition);) {
 			while (rs.next())
 				orders.add(new Order(
-
+					rs.getInt("id"),
+					rs.getDate("OrderTime"),
+					null,
+					rs.getFloat("SalesPrice"),
+					null,
+					null,
+					null,
+					null
 				));
 		} catch (SQLException e) {
 			System.err.println("Error in loading orders: " + e.getMessage());

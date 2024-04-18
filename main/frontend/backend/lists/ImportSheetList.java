@@ -22,19 +22,19 @@ public class ImportSheetList {
 	}
 
 	public boolean load_fromDatabase(String name) {
-		importSheets = new ArrayList<ImportSheet>();
-		DBconnect db = new DBconnect();
-		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
-		
-		try (ResultSet rs = db.view(null, "", condition);) {
-			while (rs.next())
-				importSheets.add(new ImportSheet(
-					
-				));
-		} catch (SQLException e) {
-			System.err.println("Error in loading import sheets: " + e.getMessage());
-			return false;
-		} finally { db.close(); }
-		return true;
-	}
+        importSheets = new ArrayList<ImportSheet>();
+        DBconnect db = new DBconnect();
+        String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
+
+        try (ResultSet rs = db.view(null, "IMPORTS", condition)) {
+            while (rs.next())
+                importSheets.add(new ImportSheet(rs.getInt("id"), rs.getDate("Timestamp"), null, rs.getFloat("TotalPrice"), null, null, null));
+        } catch (SQLException e) {
+            System.err.println("Error in loading import sheets: " + e.getMessage());
+            return false;
+        } finally {
+            db.close();
+        }
+        return true;
+    }
 }
