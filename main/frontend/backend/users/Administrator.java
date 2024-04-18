@@ -22,7 +22,7 @@ public class Administrator extends Account {
 		if (role != 0) throw new IllegalArgumentException("Role must be administrator");
 	}
 
-	public AccountList loadAccount_fromDatabase() {
+	public AccountList loadAccounts_fromDatabase() {
 		AccountList accounts = new AccountList();
 		return accounts.load_fromDatabase(null) ? accounts : null;
 	}

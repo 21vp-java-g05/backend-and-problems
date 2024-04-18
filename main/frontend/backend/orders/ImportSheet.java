@@ -53,7 +53,10 @@ public class ImportSheet {
 		try (BufferedReader reader = new BufferedReader(
 			new InputStreamReader(new FileInputStream(FileName), "UTF-8"))
 		) {
-			
+			// Initial info
+			id = -1;
+			// Lấy thời gian hiện tại
+			// Load books from file
 		} catch (FileNotFoundException e) {
 			System.err.println("Cannot find file: " + e.getMessage());
 			return false;
@@ -72,9 +75,11 @@ public class ImportSheet {
 		try {
 			db.turnAutoCommitOff();
 			// Add to Imports
-
+			String value = "(DEFAULT, " + (ImportTime == null ? "DEFAULT" : String.valueOf(ImportTime));
 
 			// Add to Imports_Book
+
+			// Add to Book if have new book
 			db.commit();
 		} catch (SQLException e) {
 			System.err.println("Error while connecting to database in add import sheet: " + e.getMessage());

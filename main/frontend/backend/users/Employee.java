@@ -44,6 +44,10 @@ public class Employee extends Account {
 		return order.add_toDatabase() ? order : null;
 	}
 
+	public boolean getImportSheet() {
+		return true;
+	}
+
 	@Override
 	public String toString() {
 		String str = "Employee:" + "\n";

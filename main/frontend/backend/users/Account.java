@@ -89,13 +89,14 @@ public class Account {
 		DBconnect db = new DBconnect();
 		String value = "fullname = '" + fullname + "', mail = '" + mail + "', username = '" + username + "', password = '" + password + "', role = " + String.valueOf(role) + ", status = " + String.valueOf(status);
 		String condition = "id = " + String.valueOf(id);
+		
 		try { return db.update("ACCOUNT", value, condition) > 0; }
 		finally { db.close(); }
 	}
 
 	public ImportSheetList loadImportSheets_fromDatabase() {
 		ImportSheetList importSheets = new ImportSheetList();
-		return importSheets.load_fromDatabase(null) ? importSheets : null;
+		return new ImportSheetList().load_fromDatabase(null) ? importSheets : null;
 	}
 	public OrderList loadOrders_fromDatabase() {
 		OrderList orders = new OrderList();

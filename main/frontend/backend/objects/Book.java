@@ -91,8 +91,8 @@ public class Book {
 
 			// Check if author, publisher, category enable when book is enabled
 			if (status) {
-				ResultSet aSet = db.view("status", "AUTHOR", "id = " + String.valueOf(author));
-				ResultSet pSet = db.view("status", "PUBLISHER", "id = " + String.valueOf(publisher));
+				ResultSet aSet = db.view("status", "AUTHOR", "id = " + String.valueOf(author.getId()));
+				ResultSet pSet = db.view("status", "PUBLISHER", "id = " + String.valueOf(publisher.getId()));
 
 				try {
 					if (
