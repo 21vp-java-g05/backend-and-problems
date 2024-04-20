@@ -151,6 +151,7 @@ public class Book {
 		DBconnect db = new DBconnect();
 		try {
 			if (status) status = checkStatus();
+			
 			return db.changeStatus("BOOK", "id = " + String.valueOf(id), status) > 0;
 		} catch (SQLException e) {
 			System.err.println("Connection error while checking book's status: " + e.getMessage());
@@ -161,6 +162,7 @@ public class Book {
 		DBconnect db = new DBconnect();
 		try {
 			db.turnAutoCommitOff();
+			
 			String condition = "id = " + String.valueOf(id);
 			if (db.delete("CATEGORY_BOOK", "book_" + condition) < 0) return false;
 			

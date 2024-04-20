@@ -4,8 +4,6 @@
 * Test code ở Main.java
 
 ## To do list
-* Thêm ImportSheet::add_toDatabase()
-* Thêm Order::add_toDatabase()
 
 * Employee::order() {
 	- book đã thanh toán thành công
@@ -15,9 +13,10 @@
 Trước khi employee thanh toán phải nhập BookList_price
 
 * BookList_price::load_fromFile()
+* BookList_price::load_fromDatabase()
 
-* Thêm ImportSheetList::load_fromDatabase()
-* Thêm OrderList::load_fromDatabase()
+* Load books in ImportSheetList::load_fromDatabase()
+* Load books in OrderList::load_fromDatabase()
 
 ### Chưa xác định
 * View revenue statistics in a week, a month or from date to date:

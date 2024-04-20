@@ -57,7 +57,9 @@ public class Category {
 
 		try {
 			db.turnAutoCommitOff();
+			
 			if (db.changeStatus("CATEGORY", condition, status) < 0) return false;
+			
 			if (! status) {
 				String value = "status = false FROM CATEGORY_BOOK";
 				condition = "status = true AND book_id = id AND category_id = " + String.valueOf(id);

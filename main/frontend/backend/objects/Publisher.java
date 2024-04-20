@@ -57,7 +57,9 @@ public class Publisher {
 		
 		try {
 			db.turnAutoCommitOff();
+			
 			if (db.changeStatus("PUBLISHER", condition, status) < 0) return false;
+			
 			if (! status) {
 				condition = "publisher = " + String.valueOf(id) + " AND status = true";
 				if (db.changeStatus("BOOK", condition, status) < 0) {

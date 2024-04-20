@@ -53,14 +53,12 @@ public class BookList_price {
 			authors.load_fromDatabase(null);
 			categories.load_fromDatabase(null);
 			
-			String str;
-			while ((str = reader.readLine()) != null) {
-				String[] parts = str.split(", ");
-				books.add(new Book(
-					-1, parts[0], parts[1], parts[2],
-					Integer.parseInt(parts[3]), 
-				));
-			}
+			// String str;
+			// while ((str = reader.readLine()) != null) {
+				// String[] parts = str.split(", ");
+				// Book book = new Book();
+				// books.add(book);
+			// }
 		} catch (FileNotFoundException e) {
 			System.err.println("Cannot find file: " + e.getMessage());
 			return false;
@@ -71,6 +69,12 @@ public class BookList_price {
 			System.err.println("Error in closing file: " + e.getMessage());
 			return false;
 		}
+		return true;
+	}
+	
+	public boolean load_fromDatabase(String object) {
+		DBconnect db = new DBconnect();
+		db.close();
 		return true;
 	}
 	public boolean add_toDatabase(String object, String id) {

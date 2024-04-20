@@ -57,7 +57,9 @@ public class Author {
 		
 		try {
 			db.turnAutoCommitOff();
+			
 			if (db.changeStatus("AUTHOR", condition, status) < 0) return false;
+			
 			if (! status) {
 				condition = "author = " + String.valueOf(id) + " AND status = true";
 				if (db.changeStatus("BOOK", condition, status) < 0) {

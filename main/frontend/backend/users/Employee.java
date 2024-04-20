@@ -41,7 +41,7 @@ public class Employee extends Account {
 			customer.check()
 		) SalesPrice *= 0.95;
 			
-		Order order = new Order(-1, null, this, SalesPrice, books, customer);
+		Order order = new Order(-1, null, this, customer, SalesPrice, books);
 
 		if (! order.add_toDatabase()) return null;
 		// - bớt remaining

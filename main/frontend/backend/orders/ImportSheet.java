@@ -1,9 +1,11 @@
 package main.frontend.backend.orders;
 
+import main.frontend.backend.objects.Book;
 import main.frontend.backend.users.Employee;
 import main.frontend.backend.utils.DBconnect;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class ImportSheet {
 	private int id;
@@ -35,6 +37,13 @@ public class ImportSheet {
 		if (books != null) this.books = books;
 	}
 
+	private float calPrice(ArrayList<Float> prices) {
+		float price = 0;
+		for (float get : prices)
+			price += get;
+		return price;
+	}
+
 	public boolean load_fromFile(String FileName) {
 		books = new BookList_price();
 		
@@ -44,23 +53,64 @@ public class ImportSheet {
 		java.util.Date current = new java.util.Date();
 		ImportTime = new Date(current.getTime());
 
-		return books.load_fromFile(FileName);
+		if (! books.load_fromFile(FileName)) return false;
+
+		TotalCost = calPrice(books.getPrices());
+		return true;
 	}
 
 	public boolean add_toDatabase() {
+		if (books == null) return false;
+
 		DBconnect db = new DBconnect();
+		String object = "IMPORTS";
+		String value = "(DEFAULT, " + toString() + ")";
+
 		try {
 			db.turnAutoCommitOff();
-			// Add to Imports
-			// String value = "(DEFAULT, " + (ImportTime == null ? "DEFAULT" : String.valueOf(ImportTime));
 
-			// Add to Imports_Book
+			if ((id = db.add_getAuto(object, value)) <= 0) return false;
+			
+			// Add book if it's not existing
+			// Get book's id
+			int bID;
+			for (Book book : books.getBooks().getBooks()) {
+				if ((bID = db.add_getAuto("BOOK", "")) <= 0) {
+					if (bID < 0) {
+						db.rollback();
+						return false;
+					}
 
-			// Add to Book if have new book
-			db.commit();
+					ResultSet rs = db.view(null, "BOOK", "isbn = " + book.getIsbn());
+					if (! rs.next()) {
+						db.rollback();
+						return false;
+					}
+					
+					bID = rs.getInt("id");
+				}
+				book.setId(bID);
+			}
+
+			if (! books.add_toDatabase(object, String.valueOf(id))) {
+				db.rollback();
+				return false;
+			}
+
+			try { db.commit(); }
+			catch (SQLException e) {
+				System.err.println("Committing error while adding import sheet: " + e.getMessage());
+				db.rollback();
+				return false;
+			}
 		} catch (SQLException e) {
 			System.err.println("Connection error while adding import sheet: " + e.getMessage());
 		} finally { db.close(); }
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return String.valueOf(ImportTime) + ", " + String.valueOf(employee.getId()) + ", " + String.valueOf(TotalCost);
 	}
 }
