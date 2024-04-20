@@ -78,14 +78,6 @@ public class DBconnect implements AutoCloseable {
 			return -1;
 		}
 	}
-	public int updateFrom(String object, String value, String sub, String condition) {
-		String query = "UPDATE " + object + " SET " + value + "FROM (" + sub + ")" + " WHERE " + condition;
-		try { return connection.createStatement().executeUpdate(query); }
-		catch (SQLException e) {
-			System.err.println("Error in update from: " + e.getMessage());
-			return -1;
-		}
-	}
 	public int changeStatus(String object, String condition, boolean status) {
 		String query = "UPDATE " + object + " SET status = " + String.valueOf(status) + " WHERE " + condition;
 		try { return connection.createStatement().executeUpdate(query); }

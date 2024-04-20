@@ -64,9 +64,46 @@ public class Book {
 		this.status = status;
 	}
 
+	private boolean checkStatus() throws SQLException {
+		DBconnect db = new DBconnect();
+		ResultSet aSet = db.view("status", "AUTHOR", "id = " + String.valueOf(author.getId()));
+		ResultSet pSet = db.view("status", "PUBLISHER", "id = " + String.valueOf(publisher.getId()));
+
+		try {
+			if (
+				(aSet.next() && !aSet.getBoolean("status")) ||
+				(pSet.next() && !pSet.getBoolean("status"))
+			) return false;
+			
+			if (categories != null) {
+				CategoryList cList = new CategoryList();
+				cList.load_fromDatabase(null);
+
+				for (Category c : categories.getCategories())
+					if (! cList.getCategoryByID(c.getId()).getStatus()) return false;
+			}
+		} finally { db.close(); }
+		return true;
+	}
+	private int addCategory_toDatabase() {
+		if (categories == null) return -1;
+		DBconnect db = new DBconnect();
+		
+		String id_Str = String.valueOf(id);
+		String value = "(";
+		
+		for (Category ca : categories.getCategories())
+			value += String.valueOf(ca.getId()) + ", " + id_Str + "), (";
+		value = value.substring(0, value.length() - 3);
+
+		try { return db.add("CATEGORY_BOOK", value); }
+		finally { db.close(); }
+	}
+
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
 		try {
+			if (status) status = checkStatus();
 			db.turnAutoCommitOff();
 			
 			// Add book
@@ -75,93 +112,51 @@ public class Book {
 			if (id <= 0) return false;
 
 			// Add category_book
-			String id_Str = String.valueOf(id);
-			value = "(";
-			
-			// If categories are not null, then add them to database
-			if (categories != null) {
-				for (Category ca : categories.getCategories())
-					value += String.valueOf(ca.getId()) + ", " + id_Str + "), (";
-				value = value.substring(0, value.length() - 3);
-				if (db.add("CATEGORY_BOOK", value) <= 0) {
-					db.rollback();
-					return false;
-				}
+			if (addCategory_toDatabase() == 0) {
+				db.rollback();
+				return false;
 			}
 
-			// Check if author, publisher, category enable when book is enabled
-			if (status) {
-				ResultSet aSet = db.view("status", "AUTHOR", "id = " + String.valueOf(author.getId()));
-				ResultSet pSet = db.view("status", "PUBLISHER", "id = " + String.valueOf(publisher.getId()));
-
-				try {
-					if (
-						(aSet.next() && !aSet.getBoolean("status")) ||
-						(pSet.next() && !pSet.getBoolean("status"))
-					) {
-						status = false;
-						System.out.println("Status is changed into false");
-					} else {
-						ResultSet cSet = db.view("status", "CATEGORY, CATEGORY_BOOK", "id = category_id AND book_id = " + String.valueOf(id));
-						while (cSet.next())
-							if (cSet.getBoolean("status")) {
-								status = false;
-								System.out.println("Status is changed into false");
-							}
-					}
-					// Change status of Book
-					if (db.changeStatus("BOOK", "id = " + String.valueOf(id), status) <= 0) {
-						db.rollback();
-						return false;
-					}
-				} catch (SQLException e) {
-					System.err.println("Error at checking status of book: " + e.getMessage());
-					db.rollback();
-					return false;
-				}
+			try {
+				db.commit();
+			} catch (SQLException e) {
+				System.err.println("Committing error while adding book: " + e.getMessage());
+				db.rollback();
+				return false;
 			}
-			db.commit();
 		} catch (SQLException e) {
-			System.err.println("Error while connecting to database in add book: " + e.getMessage());
-			return false;
+
 		} finally { db.close(); }
 		return true;
 	}
 	public boolean update_toDatabase() {
 		DBconnect db = new DBconnect();
+		String value = "title = '" + title + "', isbn = '" + isbn + "', language = '" + language + "', number_of_pages = " + String.valueOf(number_of_pages) + ", publisher = " + String.valueOf(publisher.getId()) + ", author = " + String.valueOf(author.getId());
+		String condition = "id = " + String.valueOf(id);
+		
+		try { return db.update("BOOK", value, condition) > 0; }
+		finally { db.close(); }
+	}
+	public boolean updateCategory_toDatabase() {
+		DBconnect db = new DBconnect();
 		try {
-			db.turnAutoCommitOff();
-			// Check status of author, publisher and category
-			if (status) {
-				ResultSet aSet = db.view("status", "AUTHOR", "id = " + author);
-				ResultSet pSet = db.view("status", "PUBLISHER", "id = " + publisher);
-
-				if (
-					(aSet.next() && !aSet.getBoolean("status")) ||
-					(pSet.next() && !pSet.getBoolean("status"))
-				) {
-					status = false;
-					System.out.println("Status is changed into false");
-				} else {
-					ResultSet cSet = db.view("status", "CATEGORY, CATEGORY_BOOK", "id = category_id AND book_id = " + String.valueOf(id));
-					while (cSet.next())
-						if (! cSet.getBoolean("status")) {
-							status = false;
-							System.out.println("Status is changed into false");
-						}
-				}
-			}
-			// Update book
-			String value = "title = '" + title + "', isbn = '" + isbn + "', language = '" + language + "', number_of_pages = " + String.valueOf(number_of_pages) + ", publisher = " + String.valueOf(publisher) + ", author = " + String.valueOf(author) + ", status = " + String.valueOf(status);
-			String condition = "id = " + String.valueOf(id);
+			// Delete category book
+			if (db.delete("CATEGORY_BOOK", "book_id = " + String.valueOf(id)) < 0) return false;
 			
-			if (db.update("BOOK", value, condition) <= 0) return false;
-			db.commit();
+			// Add category book
+			return addCategory_toDatabase() > 0;
+		}
+		finally { db.close(); }
+	}
+	public boolean updateStatus_toDatabase() {
+		DBconnect db = new DBconnect();
+		try {
+			if (status) status = checkStatus();
+			return db.changeStatus("BOOK", "id = " + String.valueOf(id), status) > 0;
 		} catch (SQLException e) {
-			System.err.println("Error while connecting to database in updating book: " + e.getMessage());
+			System.err.println("Connection error while checking book's status: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
-		return true;
 	}
 	public boolean delete_toDatabase() {
 		DBconnect db = new DBconnect();

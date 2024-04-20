@@ -28,16 +28,16 @@ public class CategoryList {
 		DBconnect db = new DBconnect();
 		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
 		
-		try (ResultSet rs = db.view(null, "CATEGORY", condition);) {
-			while (rs.next())
+		try (ResultSet cSet = db.view(null, "CATEGORY", condition);) {
+			while (cSet.next())
 				categories.add(new Category(
-					rs.getInt("id"),
-					rs.getString("name"),
-					rs.getString("description"),
-					rs.getBoolean("status")
+					cSet.getInt("id"),
+					cSet.getString("name"),
+					cSet.getString("description"),
+					cSet.getBoolean("status")
 				));
 		} catch (SQLException e) {
-			System.err.println("Error in loading categories: " + e.getMessage());
+			System.err.println("Connection error while loading categories: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;

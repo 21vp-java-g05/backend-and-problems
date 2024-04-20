@@ -26,17 +26,17 @@ public class CustomerList {
 		DBconnect db = new DBconnect();
 		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
 		
-		try (ResultSet rs = db.view(null, "CUSTOMER", condition);) {
-			while (rs.next())
+		try (ResultSet cSet = db.view(null, "CUSTOMER", condition);) {
+			while (cSet.next())
 				customers.add(new Customer(
-					rs.getInt("id"),
-					rs.getString("fullname"),
-					rs.getString("mail"),
-					rs.getBoolean("gender"),
-					rs.getBoolean("status")
+					cSet.getInt("id"),
+					cSet.getString("fullname"),
+					cSet.getString("mail"),
+					cSet.getBoolean("gender"),
+					cSet.getBoolean("status")
 				));
 		} catch (SQLException e) {
-			System.err.println("Error in loading customers: " + e.getMessage());
+			System.err.println("Connection error while loading customers: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;

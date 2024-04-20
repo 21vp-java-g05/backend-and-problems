@@ -26,19 +26,19 @@ public class AccountList {
 		DBconnect db = new DBconnect();
 		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
 		
-		try (ResultSet rs = db.view(null, "ACCOUNT", condition);) {
-			while (rs.next())
+		try (ResultSet aSet = db.view(null, "ACCOUNT", condition);) {
+			while (aSet.next())
 				accounts.add(new Account(
-					rs.getInt("id"),
-					rs.getString("fullname"),
-					rs.getString("mail"),
-					rs.getString("username"),
-					rs.getString("password"),
-					rs.getInt("role"),
-					rs.getBoolean("status")
+					aSet.getInt("id"),
+					aSet.getString("fullname"),
+					aSet.getString("mail"),
+					aSet.getString("username"),
+					aSet.getString("password"),
+					aSet.getInt("role"),
+					aSet.getBoolean("status")
 				));
 		} catch (SQLException e) {
-			System.err.println("Error in loading accounts: " + e.getMessage());
+			System.err.println("Connection error while loading accounts: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;

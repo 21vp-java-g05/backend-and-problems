@@ -30,35 +30,36 @@ public class BookList {
 		DBconnect db = new DBconnect();
 		String condition = name == null || name.isEmpty() ? null : ("title LIKE '%" + name + "%'");
 		
-		try (ResultSet rs = db.view(null, "BOOK", condition);) {
-			while (rs.next()) {
-				int id = rs.getInt("id");
-				CategoryList CategoriesEachBook = new CategoryList();
-				String condition1 = "book_id = " + String.valueOf(id);
+		try (ResultSet bSet = db.view(null, "BOOK", condition);) {
+			while (bSet.next()) {
+				int id = bSet.getInt("id");
 				
-				// Load categories
-				try (ResultSet resultSet = db.view("category_id", "CATEGORY_BOOK", condition1);) {
-					while (resultSet.next())
-						CategoriesEachBook.add(categories.getCategoryByID(resultSet.getInt("category_id")));
+				CategoryList cEachBook = new CategoryList();
+				condition = "book_id = " + String.valueOf(id);
+				
+				// Load categories for each book
+				try (ResultSet cSet = db.view("category_id", "CATEGORY_BOOK", condition);) {
+					while (cSet.next())
+						cEachBook.add(categories.getCategoryByID(cSet.getInt("category_id")));
 				} catch (SQLException e) {
-					System.err.println("Error loading categories for each book");
+					System.err.println("Connection error while loading categories for each book");
 					return false;
 				}
 
 				// Load books
 				Book book = new Book(
-					id, rs.getString("title"),
-					rs.getString("isbn"),
-					rs.getString("language"),
-					rs.getInt("number_of_pages"),
-					publishers.getPublisherByID(rs.getInt("publisher")),
-					authors.getAuthorByID(rs.getInt("author")),
-					CategoriesEachBook, rs.getBoolean("status")
+					id, bSet.getString("title"),
+					bSet.getString("isbn"),
+					bSet.getString("language"),
+					bSet.getInt("number_of_pages"),
+					publishers.getPublisherByID(bSet.getInt("publisher")),
+					authors.getAuthorByID(bSet.getInt("author")),
+					cEachBook, bSet.getBoolean("status")
 				);
 				books.add(book);
 			}
 		} catch (SQLException e) {
-			System.err.println("Error in loading books: " + e.getMessage());
+			System.err.println("Connection error while loading books: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;

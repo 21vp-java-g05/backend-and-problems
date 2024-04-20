@@ -26,16 +26,16 @@ public class PublisherList {
 		DBconnect db = new DBconnect();
 		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
 		
-		try (ResultSet rs = db.view(null, "PUBLISHER", condition);) {
-			while (rs.next())
+		try (ResultSet pSet = db.view(null, "PUBLISHER", condition);) {
+			while (pSet.next())
 				publishers.add(new Publisher(
-					rs.getInt("id"),
-					rs.getString("name"),
-					rs.getString("description"),
-					rs.getBoolean("status")
+					pSet.getInt("id"),
+					pSet.getString("name"),
+					pSet.getString("description"),
+					pSet.getBoolean("status")
 				));
 		} catch (Exception e) {
-			System.err.println("Error in loading publishers: " + e.getMessage());
+			System.err.println("Connection error while loading publishers: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;

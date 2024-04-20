@@ -39,27 +39,42 @@ public class Category {
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
 		String value = "(DEFAULT, " + toString() + ")";
+		
 		try { return db.add("CATEGORY", value) > 0; }
 		finally { db.close(); }
 	}
 	public boolean update_toDatabase(int id) {
 		DBconnect db = new DBconnect();
+		String value = "name = '" + name + "', description = '" + description + "'";
+		String condition = "id = " + String.valueOf(id);
+
+		try { return db.update("CATEGORY", value, condition) > 0; }
+		finally { db.close(); }
+	}
+	public boolean updateStatus_toDatabase() {
+		DBconnect db = new DBconnect();
+		String condition = "id = " + String.valueOf(id);
+
 		try {
 			db.turnAutoCommitOff();
-			String value = "name = '" + name + "', description = '" + description + "', status = " + String.valueOf(status);
-			String condition = "id = " + String.valueOf(id);
-			if (db.update("CATEGORY", value, condition) <= 0) return false;
-
+			if (db.changeStatus("CATEGORY", condition, status) < 0) return false;
 			if (! status) {
-				condition = "book_id = id AND category_id = " + String.valueOf(id);
-				if (db.updateFrom("BOOK", "status = false", "CATEGORY_BOOK", condition) < 0) {
+				String value = "status = false FROM CATEGORY_BOOK";
+				condition = "status = true AND book_id = id AND category_id = " + String.valueOf(id);
+				if (db.update("BOOK", value, condition) < 0) {
 					db.rollback();
 					return false;
 				}
 			}
-			db.commit();
+
+			try { db.commit(); }
+			catch (SQLException e) {
+				System.err.println("Committing error in updating category's status: " + e.getMessage());
+				db.rollback();
+				return false;
+			}
 		} catch (SQLException e) {
-			System.err.println("Error while connecting to database in updating category: " + e.getMessage());
+			System.err.println("Connection error in updating category's status: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;
@@ -67,9 +82,9 @@ public class Category {
 	public boolean delete_toDatabase() {
 		DBconnect db = new DBconnect();
 		String condition = "id = " + String.valueOf(id);
-		boolean rs = db.delete("CATEGORY", condition) > 0;
-		db.close();
-		return rs;
+
+		try { return db.delete("CATEGORY", condition) > 0; }
+		finally { db.close(); }
 	}
 	
 	@Override

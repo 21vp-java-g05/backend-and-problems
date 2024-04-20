@@ -26,16 +26,16 @@ public class AuthorList {
 		DBconnect db = new DBconnect();
 		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
 		
-		try (ResultSet rs = db.view(null, "AUTHOR", condition);) {
-			while (rs.next())
+		try (ResultSet aSet = db.view(null, "AUTHOR", condition);) {
+			while (aSet.next())
 				authors.add(new Author(
-					rs.getInt("id"),
-					rs.getString("name"),
-					rs.getString("description"),
-					rs.getBoolean("status")
+					aSet.getInt("id"),
+					aSet.getString("name"),
+					aSet.getString("description"),
+					aSet.getBoolean("status")
 				));
 		} catch (SQLException e) {
-			System.err.println("Error in loading authors: " + e.getMessage());
+			System.err.println("Connection error while loading authors: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;

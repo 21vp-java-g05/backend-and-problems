@@ -39,27 +39,41 @@ public class Publisher {
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
 		String value = "(DEFAULT, " + toString() + ")";
+		
 		try { return db.add("PUBLISHER", value) > 0; }
 		finally { db.close(); }
 	}
 	public boolean update_toDatabase(int id) {
 		DBconnect db = new DBconnect();
+		String value = "name = '" + name + "', description = '" + description + "'";
+		String condition = "id = " + String.valueOf(id);
+		
+		try { return db.update("PUBLISHER", value, condition) > 0; }
+		finally { db.close(); }
+	}
+	public boolean updateStatus_toDatabase() {
+		DBconnect db = new DBconnect();
+		String condition = "id = " + String.valueOf(id);
+		
 		try {
 			db.turnAutoCommitOff();
-			String value = "name = '" + name + "', description = '" + description + "', status = " + String.valueOf(status);
-			String condition = "id = " + String.valueOf(id);
-			if (db.update("PUBLISHER", value, condition) <= 0)  return false;
-
+			if (db.changeStatus("PUBLISHER", condition, status) < 0) return false;
 			if (! status) {
 				condition = "publisher = " + String.valueOf(id) + " AND status = true";
-				if (db.update("BOOK", "status = false", condition) < 0) {
+				if (db.changeStatus("BOOK", condition, status) < 0) {
 					db.rollback();
 					return false;
 				}
 			}
-			db.commit();
+			
+			try { db.commit(); }
+			catch (SQLException e) {
+				System.err.println("Committing error in updating publisher's status: " + e.getMessage());
+				db.rollback();
+				return false;
+			}
 		} catch (SQLException e) {
-			System.err.println("Error while connecting to database in updating publisher: " + e.getMessage());
+			System.err.println("Connection error in updating publisher's status: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;
@@ -67,9 +81,9 @@ public class Publisher {
 	public boolean delete_toDatabase() {
 		DBconnect db = new DBconnect();
 		String condition = "id = " + String.valueOf(id);
-		boolean rs = db.delete("PUBLISHER", condition) > 0;
-		db.close();
-		return rs;
+		
+		try { return db.delete("PUBLISHER", condition) > 0; }
+		finally { db.close(); }
 	}
 
 	@Override

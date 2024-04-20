@@ -9,6 +9,8 @@
 * Thêm ImportSheet::load_fromFile()
 * Thêm Order::add_toDatabase()
 * Update category trong Book::update_toDatabase()
+* Updtae Employee::order()::changeInfo()
+* ImportBooks.java
 
 ### Khiêm
 * Thêm ImportSheetList::load_fromDatabase()

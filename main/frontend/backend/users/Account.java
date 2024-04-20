@@ -22,8 +22,12 @@ public class Account {
 		this.status = status;
 		this.role = role;
 	}
-	public Account(int id, String fullname, String mail, String username, String password, int role) { this(id, fullname, mail, username, password, role, true); }
-	public Account(Account other) { this(other.id, other.fullname, other.mail, other.username, other.password, other.role, other.status); }
+	public Account(int id, String fullname, String mail, String username, String password, int role) {
+		this(id, fullname, mail, username, password, role, true);
+	}
+	public Account(Account other) {
+		this(other.id, other.fullname, other.mail, other.username, other.password, other.role, other.status);
+	}
 
 	public int getId() { return id; }
 	public String getAccountUsername() { return username; }

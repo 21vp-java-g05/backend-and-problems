@@ -26,11 +26,13 @@ public class ImportSheetList {
         DBconnect db = new DBconnect();
         String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
 
-        try (ResultSet rs = db.view(null, "IMPORTS", condition)) {
-            while (rs.next())
-                importSheets.add(new ImportSheet(rs.getInt("id"), rs.getDate("Timestamp"), null, rs.getFloat("TotalPrice"), null, null, null));
+        try (ResultSet iSet = db.view(null, "IMPORTS", condition)) {
+            while (iSet.next())
+                importSheets.add(new ImportSheet(
+                    
+                ));
         } catch (SQLException e) {
-            System.err.println("Error in loading import sheets: " + e.getMessage());
+            System.err.println("Connection error while loading import sheets: " + e.getMessage());
             return false;
         } finally {
             db.close();
