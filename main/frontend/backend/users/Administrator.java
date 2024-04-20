@@ -29,7 +29,9 @@ public class Administrator extends Account {
 	public boolean addAccount_toDatabase(Account account) {
 		DBconnect db = new DBconnect();
 		String value = "(DEFAULT, " + account.toString() + ")";
-		try { return db.add("ACCOUNT", value) > 0; }
+		id = db.add_getAuto("ACCOUNT", value);
+
+		try { return id > 0; }
 		finally { db.close(); }
 	}
 	public boolean editAccount_fromDatabase(Account account) {

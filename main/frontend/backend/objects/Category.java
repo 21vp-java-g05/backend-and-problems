@@ -39,8 +39,9 @@ public class Category {
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
 		String value = "(DEFAULT, " + toString() + ")";
+		id = db.add_getAuto("CATEGORY", value);
 		
-		try { return db.add("CATEGORY", value) > 0; }
+		try { return id > 0; }
 		finally { db.close(); }
 	}
 	public boolean update_toDatabase(int id) {

@@ -69,8 +69,14 @@ public class Account {
 			String condition = "username = '" + username + "' AND password = '" + hashedPassword + "'";
 			ResultSet rs = db.view(null, "ACCOUNT", condition);
 	
-			if (rs.next())
+			if (rs.next()) {
+				if (! rs.getBoolean("status")) {
+					System.err.println("Account disabled");
+					return null;
+				}
 				return rs.getInt("role") == 0 ? new Administrator(this) : new Employee(this);
+			}
+			
 			System.err.println("Invalid username or password");
 			return null;
 		} catch (SQLException e) {

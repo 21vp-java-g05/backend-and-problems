@@ -33,7 +33,9 @@ public class Customer {
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
 		String value = "(DEFAULT, " + toString() + ")";
-		try { return db.add("CUSTOMER", value) > 0; }
+		id = db.add_getAuto("CUSTOMER", value);
+		
+		try { return id > 0; }
 		finally { db.close(); }
 	}
 	public boolean check() {

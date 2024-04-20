@@ -4,15 +4,16 @@
 * Test code ở Main.java
 
 ## To do list
-### Minh
 * Thêm ImportSheet::add_toDatabase()
-* Thêm ImportSheet::load_fromFile()
-* Thêm Order::add_toDatabase()
-* Update category trong Book::update_toDatabase()
-* Updtae Employee::order()::changeInfo()
-* ImportBooks.java
 
-### Khiêm
+* Thêm Order::add_toDatabase()
+* Employee::order() {
+	- book đã thanh toán thành công
+	tính theo số lượng còn lại trong importsheet
+}
+
+* ImportBooks::load_fromFile()
+
 * Thêm ImportSheetList::load_fromDatabase()
 * Thêm OrderList::load_fromDatabase()
 

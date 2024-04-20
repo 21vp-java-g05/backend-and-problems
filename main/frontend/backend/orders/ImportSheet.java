@@ -4,7 +4,6 @@ import main.frontend.backend.users.Employee;
 import main.frontend.backend.utils.DBconnect;
 
 import java.sql.*;
-import java.io.*;
 
 public class ImportSheet {
 	private int id;
@@ -29,33 +28,23 @@ public class ImportSheet {
 	public float getTotalCost() { return TotalCost; }
 	public ImportBooks getBookList() { return books; }
 
-	public void changeInfo(int id, Date ImportTime, Employee employee, float TotalCost, ImportBooks books) {
+	public void changeInfo(int id, Date ImportTime, Employee employee, ImportBooks books) {
 		this.id = id;
 		this.ImportTime = ImportTime;
 		if (employee != null) this.employee = employee;
-		this.TotalCost = TotalCost;
 		if (books != null) this.books = books;
 	}
 
 	public boolean load_fromFile(String FileName) {
-		try (BufferedReader reader = new BufferedReader(
-			new InputStreamReader(new FileInputStream(FileName), "UTF-8"))
-		) {
-			// Initial info
-			id = -1;
-			// Get current time
-			// Load books from file
-		} catch (FileNotFoundException e) {
-			System.err.println("Cannot find file: " + e.getMessage());
-			return false;
-		} catch (UnsupportedEncodingException e) {
-			System.err.println("Encoding error: " + e.getMessage());
-			return false;
-		} catch (IOException e) {
-			System.err.println("Error in closing file: " + e.getMessage());
-			return false;
-		}
-		return true;
+		books = new ImportBooks();
+		
+		TotalCost = 0;
+		for (float get : books.getPrices()) TotalCost += get;
+
+		java.util.Date current = new java.util.Date();
+		ImportTime = new Date(current.getTime());
+
+		return books.load_fromFile(FileName);
 	}
 
 	public boolean add_toDatabase() {

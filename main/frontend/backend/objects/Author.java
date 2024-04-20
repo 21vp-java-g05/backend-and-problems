@@ -39,8 +39,9 @@ public class Author {
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
 		String value = "(DEFAULT, " + toString() + ")";
+		id = db.add_getAuto("AUTHOR", value);
 		
-		try { return db.add("AUTHOR", value) > 0; }
+		try { return id > 0; }
 		finally { db.close(); }
 	}
 	public boolean update_toDatabase() {
