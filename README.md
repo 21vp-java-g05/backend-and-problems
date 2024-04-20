@@ -5,14 +5,16 @@
 
 ## To do list
 * Thêm ImportSheet::add_toDatabase()
-
 * Thêm Order::add_toDatabase()
+
 * Employee::order() {
 	- book đã thanh toán thành công
 	tính theo số lượng còn lại trong importsheet
 }
 
-* ImportBooks::load_fromFile()
+Trước khi employee thanh toán phải nhập BookList_price
+
+* BookList_price::load_fromFile()
 
 * Thêm ImportSheetList::load_fromDatabase()
 * Thêm OrderList::load_fromDatabase()

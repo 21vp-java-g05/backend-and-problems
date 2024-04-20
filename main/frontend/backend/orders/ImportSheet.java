@@ -10,10 +10,10 @@ public class ImportSheet {
 	private Date ImportTime;
 	private Employee employee;
 	private float TotalCost;
-	private ImportBooks books;
+	private BookList_price books;
 
 	public ImportSheet() {}
-	public ImportSheet(int id, Date ImportTime, Employee employee, float TotalCost, ImportBooks books) {
+	public ImportSheet(int id, Date ImportTime, Employee employee, float TotalCost, BookList_price books) {
 		this.id = id;
 		this.ImportTime = ImportTime;
 		this.employee = employee;
@@ -26,9 +26,9 @@ public class ImportSheet {
 	public Date getImportTime() { return ImportTime; }
 	public Employee getEmployee() { return employee; }
 	public float getTotalCost() { return TotalCost; }
-	public ImportBooks getBookList() { return books; }
+	public BookList_price getBookList() { return books; }
 
-	public void changeInfo(int id, Date ImportTime, Employee employee, ImportBooks books) {
+	public void changeInfo(int id, Date ImportTime, Employee employee, BookList_price books) {
 		this.id = id;
 		this.ImportTime = ImportTime;
 		if (employee != null) this.employee = employee;
@@ -36,7 +36,7 @@ public class ImportSheet {
 	}
 
 	public boolean load_fromFile(String FileName) {
-		books = new ImportBooks();
+		books = new BookList_price();
 		
 		TotalCost = 0;
 		for (float get : books.getPrices()) TotalCost += get;

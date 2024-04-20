@@ -108,8 +108,7 @@ public class Book {
 			
 			// Add book
 			String value = "(DEFAULT, " + toString() + ")";
-			id = db.add_getAuto("BOOK", value);
-			if (id <= 0) return false;
+			if ((id = db.add_getAuto("BOOK", value)) <= 0) return false;
 
 			// Add category_book
 			if (addCategory_toDatabase() == 0) {

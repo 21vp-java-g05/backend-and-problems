@@ -21,7 +21,28 @@ public class BookList {
 		return null;
 	}
 
-	public boolean loadBooks_fromDatabase(String name, PublisherList publishers, AuthorList authors, CategoryList categories) {
+	public ArrayList<Book> getBooks() { return books; }
+
+	private CategoryList getCategories_forBook(CategoryList categories, String id) {
+		DBconnect db = new DBconnect();
+		CategoryList cEachBook = new CategoryList();
+		String condition = "book_id = " + id;
+		
+		try (ResultSet cSet = db.view("category_id", "CATEGORY_BOOK", condition);) {
+			while (cSet.next())
+				cEachBook.add(categories.getCategoryByID(cSet.getInt("category_id")));
+		} catch (SQLException e) {
+			System.err.println("Connection error while loading categories for each book");
+			return null;
+		} finally { db.close(); }
+		return cEachBook;
+	}
+
+	public boolean loadBooks_fromDatabase(String name) {
+		PublisherList publishers = new PublisherList();
+		AuthorList authors = new AuthorList();
+		CategoryList categories = new CategoryList();
+		
 		publishers.load_fromDatabase(null);
 		authors.load_fromDatabase(null);
 		categories.load_fromDatabase(null);
@@ -33,20 +54,7 @@ public class BookList {
 		try (ResultSet bSet = db.view(null, "BOOK", condition);) {
 			while (bSet.next()) {
 				int id = bSet.getInt("id");
-				
-				CategoryList cEachBook = new CategoryList();
-				condition = "book_id = " + String.valueOf(id);
-				
-				// Load categories for each book
-				try (ResultSet cSet = db.view("category_id", "CATEGORY_BOOK", condition);) {
-					while (cSet.next())
-						cEachBook.add(categories.getCategoryByID(cSet.getInt("category_id")));
-				} catch (SQLException e) {
-					System.err.println("Connection error while loading categories for each book");
-					return false;
-				}
 
-				// Load books
 				Book book = new Book(
 					id, bSet.getString("title"),
 					bSet.getString("isbn"),
@@ -54,7 +62,8 @@ public class BookList {
 					bSet.getInt("number_of_pages"),
 					publishers.getPublisherByID(bSet.getInt("publisher")),
 					authors.getAuthorByID(bSet.getInt("author")),
-					cEachBook, bSet.getBoolean("status")
+					getCategories_forBook(categories, String.valueOf(id)),
+					bSet.getBoolean("status")
 				);
 				books.add(book);
 			}

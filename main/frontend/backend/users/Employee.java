@@ -2,7 +2,7 @@ package main.frontend.backend.users;
 
 import java.util.ArrayList;
 
-import main.frontend.backend.orders.ImportBooks;
+import main.frontend.backend.orders.BookList_price;
 import main.frontend.backend.orders.ImportSheet;
 import main.frontend.backend.orders.Order;
 
@@ -32,10 +32,8 @@ public class Employee extends Account {
 		return price*diff;
 	}
 
-	public Order order(Customer customer) {
-		ImportBooks books = new ImportBooks();
-		
-		float SalesPrice = calPrice(books.getPrices());
+	public Order order(Customer customer, BookList_price books) {
+		float SalesPrice = calPrice(books.calPrices());
 		
 		// Check if customer exists
 		if (
@@ -45,13 +43,18 @@ public class Employee extends Account {
 			
 		Order order = new Order(-1, null, this, SalesPrice, books, customer);
 
-		return order.add_toDatabase() ? order : null;
+		if (! order.add_toDatabase()) return null;
+		// - bớt remaining
+
+		return order;
 	}
 
 	public boolean getImportSheet(String FileName) {
 		ImportSheet importSheet = new ImportSheet();
 		importSheet.changeInfo(-1, null, this, null);
-		return importSheet.load_fromFile(FileName);
+		
+		if (! importSheet.load_fromFile(FileName)) return false;
+		return importSheet.add_toDatabase();
 	}
 
 	@Override

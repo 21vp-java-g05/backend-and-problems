@@ -12,11 +12,11 @@ public class Order {
 	private Date OrderTime;
 	private Employee employee;
 	private float SalesPrice;
-	private ImportBooks books;
+	private BookList_price books;
 	private Customer customer;
 
 	public Order() {}
-	public Order(int id, Date OrderTime, Employee employee, float SalesPrice, ImportBooks books, Customer customer) {
+	public Order(int id, Date OrderTime, Employee employee, float SalesPrice, BookList_price books, Customer customer) {
 		this.id = id;
 		this.OrderTime = OrderTime;
 		this.employee = employee;
@@ -30,10 +30,10 @@ public class Order {
 	public Date getOrderTime() { return OrderTime; }
 	public Employee getEmployee() { return employee; }
 	public float getSalesPrice() { return SalesPrice; }
-	public ImportBooks getBooks() { return books; }
+	public BookList_price getBooks() { return books; }
 	public Customer getCustomer() { return customer; }
 
-	public void changeInfo(int id, Date OrderTime, Employee employee, float SalesPrice, ImportBooks books, Customer customer) {
+	public void changeInfo(int id, Date OrderTime, Employee employee, float SalesPrice, BookList_price books, Customer customer) {
 		this.id = id;
 		this.OrderTime = OrderTime;
 		if (employee != null) this.employee = employee;
@@ -52,7 +52,7 @@ public class Order {
 			// Add to Orders_Book
 			db.commit();
 		} catch (SQLException e) {
-			System.err.println("Connection error while add order: " + e.getMessage());
+			System.err.println("Connection error while adding order: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;
