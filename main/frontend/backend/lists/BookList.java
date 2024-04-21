@@ -15,12 +15,12 @@ public class BookList {
 	public void add(Book book) { books.add(book); }
 	public void clear() { books.clear(); }
 	public int size() { return books.size(); }
-	public Book getBookById(int id) {
+	
+	public Book getBook_byId(int id) {
 		for (Book book : books)
 			if (book.getId() == id) return book;
 		return null;
 	}
-
 	public ArrayList<Book> getBooks() { return books; }
 
 	private CategoryList getCategories_forBook(CategoryList categories, String id) {
@@ -30,7 +30,7 @@ public class BookList {
 		
 		try (ResultSet cSet = db.view("category_id", "CATEGORY_BOOK", condition);) {
 			while (cSet.next())
-				cEachBook.add(categories.getCategoryByID(cSet.getInt("category_id")));
+				cEachBook.add(categories.getCategory_byID(cSet.getInt("category_id")));
 		} catch (SQLException e) {
 			System.err.println("Connection error while loading categories for each book");
 			return null;
@@ -60,8 +60,8 @@ public class BookList {
 					bSet.getString("isbn"),
 					bSet.getString("language"),
 					bSet.getInt("number_of_pages"),
-					publishers.getPublisherByID(bSet.getInt("publisher")),
-					authors.getAuthorByID(bSet.getInt("author")),
+					publishers.getPublisher_byID(bSet.getInt("publisher")),
+					authors.getAuthor_byID(bSet.getInt("author")),
 					getCategories_forBook(categories, String.valueOf(id)),
 					bSet.getBoolean("status")
 				);

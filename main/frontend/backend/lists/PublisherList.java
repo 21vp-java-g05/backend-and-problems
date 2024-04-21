@@ -15,9 +15,15 @@ public class PublisherList {
 	public void add(Publisher publisher) { publishers.add(publisher); }
 	public void clear() { publishers.clear(); }
 	public int size() { return publishers.size(); }
-	public Publisher getPublisherByID(int id) {
+	
+	public Publisher getPublisher_byID(int id) {
 		for (Publisher publisher : publishers)
 			if (publisher.getId() == id) return publisher;
+		return null;
+	}
+	public Publisher getPublisher_byName(String name) {
+		for (Publisher publisher : publishers)
+			if (publisher.getName().compareTo(name) == 0) return publisher;
 		return null;
 	}
 

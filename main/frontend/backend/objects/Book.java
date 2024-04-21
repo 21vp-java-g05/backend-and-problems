@@ -80,7 +80,7 @@ public class Book {
 				cList.load_fromDatabase(null);
 
 				for (Category c : categories.getCategories())
-					if (! cList.getCategoryByID(c.getId()).getStatus()) return false;
+					if (! cList.getCategory_byID(c.getId()).getStatus()) return false;
 			}
 		} finally { db.close(); }
 		return true;

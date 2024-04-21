@@ -17,7 +17,8 @@ public class OrderList {
 	public void add(Order author) { orders.add(author); }
 	public void clear() { orders.clear(); }
 	public int size() { return orders.size(); }
-	public Order getAuthorByID(int id) {
+	
+	public Order getAuthor_byID(int id) {
 		for (Order order : orders)
 			if (order.getId() == id) return order;
 		return null;
@@ -41,8 +42,8 @@ public class OrderList {
 				orders.add(new Order(
 					oSet.getInt("id"),
 					new Date(oSet.getLong("order_time")),
-					new Employee(accounts.getAccountByID(oSet.getInt("employee"))),
-					customers.getCustomerByID(oSet.getInt("customer")),
+					new Employee(accounts.getAccount_byID(oSet.getInt("employee"))),
+					customers.getCustomer_byID(oSet.getInt("customer")),
 					oSet.getInt("sale_price"),
 					books
 				));

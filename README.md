@@ -4,19 +4,16 @@
 * Test code ở Main.java
 
 ## To do list
-
 * Employee::order() {
 	- book đã thanh toán thành công
 	tính theo số lượng còn lại trong importsheet
 }
 
-Trước khi employee thanh toán phải nhập BookList_price
-
 * BookList_price::load_fromFile()
-* BookList_price::load_fromDatabase()
 
-* Load books in ImportSheetList::load_fromDatabase()
-* Load books in OrderList::load_fromDatabase()
+* Giải quyết load books trong BookList_price:
+	* ImportSheetList::load_fromDatabase()
+	* OrderList::load_fromDatabase()
 
 ### Chưa xác định
 * View revenue statistics in a week, a month or from date to date:

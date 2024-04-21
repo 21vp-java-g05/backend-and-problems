@@ -15,7 +15,8 @@ public class CustomerList {
 	public void add(Customer customer) { customers.add(customer); }
 	public void clear() { customers.clear(); }
 	public int size() { return customers.size(); }
-	public Customer getCustomerByID(int id) {
+	
+	public Customer getCustomer_byID(int id) {
 		for (Customer customer : customers)
 			if (customer.getId() == id) return customer;
 		return null;

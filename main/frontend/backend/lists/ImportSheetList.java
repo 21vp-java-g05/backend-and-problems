@@ -17,7 +17,8 @@ public class ImportSheetList {
 	public void add(ImportSheet importSheet) { importSheets.add(importSheet); }
 	public void clear() { importSheets.clear(); }
 	public int size() { return importSheets.size(); }
-	public ImportSheet getAuthorByID(int id) {
+	
+    public ImportSheet getAuthor_byID(int id) {
 		for (ImportSheet importSheet : importSheets)
 			if (importSheet.getId() == id) return importSheet;
 		return null;
@@ -39,7 +40,7 @@ public class ImportSheetList {
                 importSheets.add(new ImportSheet(
                     iSet.getInt("id"),
                     new Date(iSet.getLong("import_time")),
-                    new Employee(accountList.getAccountByID(iSet.getInt("employee"))),
+                    new Employee(accountList.getAccount_byID(iSet.getInt("employee"))),
                     iSet.getInt("total_cost"),
                     books
                 ));

@@ -15,12 +15,17 @@ public class CategoryList {
 	public void add(Category category) { categories.add(category); }
 	public void clear() { categories.clear(); }
 	public int size() { return categories.size(); }
-	public Category getCategoryByID(int id) {
+	
+	public Category getCategory_byID(int id) {
 		for (Category category : categories)
 			if (category.getId() == id) return category;
 		return null;
 	}
-
+	public Category getCategory_byName(String name) {
+		for (Category category : categories)
+			if (category.getName().compareTo(name) == 0) return category;
+		return null;
+	}
 	public ArrayList<Category> getCategories() { return categories; }
 
 	public boolean load_fromDatabase(String name) {

@@ -15,9 +15,15 @@ public class AuthorList {
 	public void add(Author author) { authors.add(author); }
 	public void clear() { authors.clear(); }
 	public int size() { return authors.size(); }
-	public Author getAuthorByID(int id) {
+	
+	public Author getAuthor_byID(int id) {
 		for (Author author : authors)
 			if (author.getId() == id) return author;
+		return null;
+	}
+	public Author getAuthor_byName(String name) {
+		for (Author author : authors)
+			if (author.getName().compareTo(name) == 0) return author;
 		return null;
 	}
 

@@ -15,7 +15,8 @@ public class AccountList {
 	public void add(Account account) { accounts.add(account); }
 	public void clear() { accounts.clear(); }
 	public int size() { return accounts.size(); }
-	public Account getAccountByID(int id) {
+	
+	public Account getAccount_byID(int id) {
 		for (Account account : accounts)
 			if (account.getId() == id) return account;
 		return null;

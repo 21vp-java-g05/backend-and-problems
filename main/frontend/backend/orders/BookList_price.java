@@ -24,6 +24,13 @@ public class BookList_price {
 	}
 	public BookList_price(BookList_price other) { this(other.books, other.quantities, other.prices); }
 
+	public void add(Book book, int quantity, float price) {
+		books.add(book);
+		quantities.add(quantity);
+		prices.add(price);
+	}
+	public int size() { return books.size(); }
+
 	public BookList getBooks() { return books; }
 	public ArrayList<Integer> getQuantities() { return quantities; }
 	public ArrayList<Float> getPrices() { return prices; }
