@@ -92,7 +92,7 @@ public class ImportSheet {
 				book.setId(bID);
 			}
 
-			if (! books.add_toDatabase(object, String.valueOf(id))) {
+			if (! books.add_toDatabase(object, id)) {
 				db.rollback();
 				return false;
 			}
@@ -111,6 +111,6 @@ public class ImportSheet {
 
 	@Override
 	public String toString() {
-		return String.valueOf(ImportTime) + ", " + String.valueOf(employee.getId()) + ", " + String.valueOf(TotalCost);
+		return String.valueOf(new Timestamp(ImportTime.getTime())) + ", " + String.valueOf(employee.getId()) + ", " + String.valueOf(TotalCost);
 	}
 }

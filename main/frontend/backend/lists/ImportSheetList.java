@@ -32,14 +32,17 @@ public class ImportSheetList {
         importSheets = new ArrayList<ImportSheet>();
         DBconnect db = new DBconnect();
         String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
+        String object = "IMPORTS";
 
-        try (ResultSet iSet = db.view(null, "IMPORTS", condition)) {
+        try (ResultSet iSet = db.view(null, object, condition)) {
             while (iSet.next()) {
+                int id = iSet.getInt("id");
                 BookList_price books = new BookList_price();
+                if (! books.load_fromDatabase(object, id)) return false;
                 
                 importSheets.add(new ImportSheet(
-                    iSet.getInt("id"),
-                    new Date(iSet.getLong("import_time")),
+                    id,
+                    new Date(iSet.getTimestamp("import_time").getTime()),
                     new Employee(accountList.getAccount_byID(iSet.getInt("employee"))),
                     iSet.getInt("total_cost"),
                     books

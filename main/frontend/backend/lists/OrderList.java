@@ -34,14 +34,18 @@ public class OrderList {
 		orders = new ArrayList<Order>();
 		DBconnect db = new DBconnect();
 		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
+		String object = "ORDERS";
 		
-		try (ResultSet oSet = db.view(null, "ORDERS", condition);) {
+		try (ResultSet oSet = db.view(null, object, condition);) {
 			while (oSet.next()) {
+				int id = oSet.getInt("id");
 				BookList_price books = new BookList_price();
+				if (! books.load_fromDatabase(object, id)) return false;
+
 
 				orders.add(new Order(
-					oSet.getInt("id"),
-					new Date(oSet.getLong("order_time")),
+					id,
+					new Date(oSet.getTimestamp("order_time").getTime()),
 					new Employee(accounts.getAccount_byID(oSet.getInt("employee"))),
 					customers.getCustomer_byID(oSet.getInt("customer")),
 					oSet.getInt("sale_price"),

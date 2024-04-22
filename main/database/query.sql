@@ -84,7 +84,7 @@ CREATE TABLE IMPORTS_BOOK (
 	imports_id INT,
 	book_id INT,
 	quantity INT NOT NULL,
-	import_price REAL NOT NULL,
+	price REAL NOT NULL,
 	remaining INT NOT NULL,
 	
 	CONSTRAINT PK_IMPORT_BOOK PRIMARY KEY (imports_id, book_id),

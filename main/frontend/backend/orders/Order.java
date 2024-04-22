@@ -54,7 +54,7 @@ public class Order {
 
 			if ((id = db.add_getAuto(object, value)) <= 0) return false;
 			
-			if (! books.add_toDatabase(object, String.valueOf(id))) {
+			if (! books.add_toDatabase(object, id)) {
 				db.rollback();
 				return false;
 			}
@@ -74,6 +74,6 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return String.valueOf(OrderTime) + ", " + String.valueOf(employee.getId()) + ", " + String.valueOf(customer.getId()) + ", " + String.valueOf(SalesPrice);
+		return String.valueOf(new Timestamp(OrderTime.getTime())) + ", " + String.valueOf(employee.getId()) + ", " + String.valueOf(customer.getId()) + ", " + String.valueOf(SalesPrice);
 	}
 }
