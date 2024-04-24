@@ -10,6 +10,7 @@ public class AccountList {
 	private ArrayList<Account> accounts;
 	
 	public AccountList() { accounts = new ArrayList<>(); }
+	public AccountList(ArrayList<Account> accounts) { accounts = new ArrayList<>(accounts); }
 	public AccountList(AccountList other) { accounts = new ArrayList<>(other.accounts); }
 	
 	public void add(Account account) { accounts.add(account); }
@@ -39,7 +40,7 @@ public class AccountList {
 					aSet.getBoolean("status")
 				));
 		} catch (SQLException e) {
-			System.err.println("Connection error while loading accounts: " + e.getMessage());
+			System.err.println("next() error while loading accounts: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;

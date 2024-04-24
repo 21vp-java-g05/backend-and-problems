@@ -10,6 +10,7 @@ public class AuthorList {
 	private ArrayList<Author> authors;
 	
 	public AuthorList() { authors = new ArrayList<>(); }
+	public AuthorList(ArrayList<Author> authors) { authors = new ArrayList<>(authors); }
 	public AuthorList(AuthorList other) { authors = new ArrayList<>(other.authors); }
 	
 	public void add(Author author) { authors.add(author); }
@@ -41,7 +42,7 @@ public class AuthorList {
 					aSet.getBoolean("status")
 				));
 		} catch (SQLException e) {
-			System.err.println("Connection error while loading authors: " + e.getMessage());
+			System.err.println("next() error while loading authors: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;

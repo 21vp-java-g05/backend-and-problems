@@ -103,8 +103,14 @@ public class Book {
 	public boolean add_toDatabase() {
 		DBconnect db = new DBconnect();
 		try {
-			if (status) status = checkStatus();
-			db.turnAutoCommitOff();
+			if (status)
+				try { status = checkStatus(); }
+				catch (SQLException e) {
+					System.err.println("next() error while checking status");
+					return false;
+				}
+			
+			if (! db.setAutoCommit(false)) return false;
 			
 			// Add book
 			String value = "(DEFAULT, " + toString() + ")";
@@ -116,15 +122,10 @@ public class Book {
 				return false;
 			}
 
-			try {
-				db.commit();
-			} catch (SQLException e) {
-				System.err.println("Committing error while adding book: " + e.getMessage());
+			if (! db.commit()) {
 				db.rollback();
 				return false;
-			}
-		} catch (SQLException e) {
-
+			};
 		} finally { db.close(); }
 		return true;
 	}
@@ -161,7 +162,7 @@ public class Book {
 	public boolean delete_toDatabase() {
 		DBconnect db = new DBconnect();
 		try {
-			db.turnAutoCommitOff();
+			if (! db.setAutoCommit(false)) return false;
 			
 			String condition = "id = " + String.valueOf(id);
 			if (db.delete("CATEGORY_BOOK", "book_" + condition) < 0) return false;
@@ -170,10 +171,11 @@ public class Book {
 				db.rollback();
 				return false;
 			}
-			db.commit();
-		} catch (SQLException e) {
-			System.err.println("Error while connecting to database in deleting book: " + e.getMessage());
-			return false;
+			
+			if (! db.commit()) {
+				db.rollback();
+				return false;
+			}
 		} finally { db.close(); }
 		return true;
 	}

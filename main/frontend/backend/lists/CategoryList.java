@@ -10,6 +10,7 @@ public class CategoryList {
 	private ArrayList<Category> categories;
 	
 	public CategoryList() { categories = new ArrayList<Category>(); }
+	public CategoryList(ArrayList<Category> categories) { categories = new ArrayList<>(categories); }
 	public CategoryList(CategoryList other) { categories = new ArrayList<>(other.categories); }
 
 	public void add(Category category) { categories.add(category); }
@@ -42,7 +43,7 @@ public class CategoryList {
 					cSet.getBoolean("status")
 				));
 		} catch (SQLException e) {
-			System.err.println("Connection error while loading categories: " + e.getMessage());
+			System.err.println("next() error while loading categories: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;

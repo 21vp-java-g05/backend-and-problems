@@ -1,6 +1,5 @@
 package main.frontend.backend.lists;
 
-import main.frontend.backend.orders.BookList_price;
 import main.frontend.backend.orders.ImportSheet;
 import main.frontend.backend.users.Employee;
 import main.frontend.backend.utils.DBconnect;
@@ -12,6 +11,7 @@ public class ImportSheetList {
 	private ArrayList<ImportSheet> importSheets;
 	
 	public ImportSheetList() { importSheets = new ArrayList<>(); }
+    public ImportSheetList(ArrayList<ImportSheet> importSheets) { importSheets = new ArrayList<>(importSheets); }
 	public ImportSheetList(ImportSheetList other) { importSheets = new ArrayList<>(other.importSheets); }
 	
 	public void add(ImportSheet importSheet) { importSheets.add(importSheet); }
@@ -32,13 +32,12 @@ public class ImportSheetList {
         importSheets = new ArrayList<ImportSheet>();
         DBconnect db = new DBconnect();
         String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
-        String object = "IMPORTS";
 
-        try (ResultSet iSet = db.view(null, object, condition)) {
+        try (ResultSet iSet = db.view(null, "IMPORTS", condition)) {
             while (iSet.next()) {
                 int id = iSet.getInt("id");
-                BookList_price books = new BookList_price();
-                if (! books.load_fromDatabase(object, id)) return false;
+                BookList_forSell books = new BookList_forSell();
+                if (! books.loadImports_fromDatabase(id)) return false;
                 
                 importSheets.add(new ImportSheet(
                     id,
@@ -49,7 +48,7 @@ public class ImportSheetList {
                 ));
             }
         } catch (SQLException e) {
-            System.err.println("Connection error while loading import sheets: " + e.getMessage());
+            System.err.println("next() error while loading import sheets: " + e.getMessage());
             return false;
         } finally {
             db.close();

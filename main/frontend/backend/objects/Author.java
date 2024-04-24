@@ -1,7 +1,5 @@
 package main.frontend.backend.objects;
 
-import java.sql.*;
-
 import main.frontend.backend.utils.DBconnect;
 
 public class Author {
@@ -56,7 +54,7 @@ public class Author {
 		String condition = "id = " + String.valueOf(id);
 		
 		try {
-			db.turnAutoCommitOff();
+			if (! db.setAutoCommit(false)) return false;
 			
 			if (db.changeStatus("AUTHOR", condition, status) < 0) return false;
 			
@@ -67,16 +65,11 @@ public class Author {
 					return false;
 				}
 			}
-			
-			try { db.commit(); }
-			catch (SQLException e) {
-				System.err.println("Committing error while updating author's status: " + e.getMessage());
+
+			if (! db.commit()) {
 				db.rollback();
 				return false;
-			}
-		} catch (SQLException e) {
-			System.err.println("Connection error while updating author's status: " + e.getMessage());
-			return false;
+			};
 		} finally { db.close(); }
 		return true;
 	}

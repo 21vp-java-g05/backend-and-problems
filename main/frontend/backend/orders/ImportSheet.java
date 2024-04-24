@@ -1,21 +1,23 @@
 package main.frontend.backend.orders;
 
+import main.frontend.backend.lists.BookList_forSell;
 import main.frontend.backend.objects.Book;
+import main.frontend.backend.objects.Book_forSell;
 import main.frontend.backend.users.Employee;
 import main.frontend.backend.utils.DBconnect;
+import main.frontend.backend.utils.Time;
 
 import java.sql.*;
-import java.util.ArrayList;
 
 public class ImportSheet {
 	private int id;
 	private Date ImportTime;
 	private Employee employee;
 	private float TotalCost;
-	private BookList_price books;
+	private BookList_forSell books;
 
 	public ImportSheet() {}
-	public ImportSheet(int id, Date ImportTime, Employee employee, float TotalCost, BookList_price books) {
+	public ImportSheet(int id, Date ImportTime, Employee employee, float TotalCost, BookList_forSell books) {
 		this.id = id;
 		this.ImportTime = ImportTime;
 		this.employee = employee;
@@ -28,34 +30,32 @@ public class ImportSheet {
 	public Date getImportTime() { return ImportTime; }
 	public Employee getEmployee() { return employee; }
 	public float getTotalCost() { return TotalCost; }
-	public BookList_price getBookList() { return books; }
+	public BookList_forSell getBookList() { return books; }
 
-	public void changeInfo(int id, Date ImportTime, Employee employee, BookList_price books) {
+	public void changeInfo(int id, Date ImportTime, Employee employee, BookList_forSell books) {
 		this.id = id;
 		this.ImportTime = ImportTime;
-		if (employee != null) this.employee = employee;
-		if (books != null) this.books = books;
+		this.employee = employee;
+		this.books = books;
 	}
 
-	private float calPrice(ArrayList<Float> prices) {
+	private float calPrice() {
 		float price = 0;
-		for (float get : prices)
-			price += get;
+
+		for (Book_forSell book : books.getBooks())
+			price += book.getQuantity()*book.getPrice();
+		
 		return price;
 	}
 
 	public boolean load_fromFile(String FileName) {
-		books = new BookList_price();
+		ImportTime = new Time().currentTime();
 		
-		TotalCost = 0;
-		for (float get : books.getPrices()) TotalCost += get;
-
-		java.util.Date current = new java.util.Date();
-		ImportTime = new Date(current.getTime());
-
+		books = new BookList_forSell();
 		if (! books.load_fromFile(FileName)) return false;
-
-		TotalCost = calPrice(books.getPrices());
+		
+		TotalCost = calPrice();
+		
 		return true;
 	}
 
@@ -63,48 +63,50 @@ public class ImportSheet {
 		if (books == null) return false;
 
 		DBconnect db = new DBconnect();
-		String object = "IMPORTS";
 		String value = "(DEFAULT, " + toString() + ")";
 
 		try {
-			db.turnAutoCommitOff();
+			if (! db.setAutoCommit(false)) return false;
 
-			if ((id = db.add_getAuto(object, value)) <= 0) return false;
+			if ((id = db.add_getAuto("IMPORTS", value)) <= 0) return false;
 			
 			// Add book if it's not existing
 			// Get book's id
 			int bID;
-			for (Book book : books.getBooks().getBooks()) {
-				if ((bID = db.add_getAuto("BOOK", "")) <= 0) {
+			for (Book_forSell book_forSell : books.getBooks()) {
+				Book book = book_forSell.getBook();
+				if ((bID = db.add_getAuto("BOOK", value)) <= 0) {
 					if (bID < 0) {
 						db.rollback();
 						return false;
 					}
 
-					ResultSet rs = db.view(null, "BOOK", "isbn = " + book.getIsbn());
-					if (! rs.next()) {
-						db.rollback();
+					try {
+						ResultSet rs = db.view(null, "BOOK", "isbn = " + book.getIsbn());
+						if (! rs.next()) {
+							db.rollback();
+							return false;
+						}
+						
+						bID = rs.getInt("id");
+					} catch (SQLException e) {
+						System.err.println("next() and getInt() error while loading accounts");
 						return false;
 					}
-					
-					bID = rs.getInt("id");
 				}
 				book.setId(bID);
+				book_forSell.setSellID(id);
 			}
 
-			if (! books.add_toDatabase(object, id)) {
+			if (! books.addImports_toDatabase()) {
 				db.rollback();
 				return false;
 			}
 
-			try { db.commit(); }
-			catch (SQLException e) {
-				System.err.println("Committing error while adding import sheet: " + e.getMessage());
+			if (! db.commit()) {
 				db.rollback();
 				return false;
 			}
-		} catch (SQLException e) {
-			System.err.println("Connection error while adding import sheet: " + e.getMessage());
 		} finally { db.close(); }
 		return true;
 	}

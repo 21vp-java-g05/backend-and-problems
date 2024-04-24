@@ -10,6 +10,7 @@ public class CustomerList {
 	private ArrayList<Customer> customers;
 
 	public CustomerList() { customers = new ArrayList<>(); }
+	public CustomerList(ArrayList<Customer> customers) { customers = new ArrayList<>(customers); }
 	public CustomerList(CustomerList other) { customers = new ArrayList<>(other.customers); }
 
 	public void add(Customer customer) { customers.add(customer); }
@@ -37,7 +38,7 @@ public class CustomerList {
 					cSet.getBoolean("status")
 				));
 		} catch (SQLException e) {
-			System.err.println("Connection error while loading customers: " + e.getMessage());
+			System.err.println("next() error while loading customers: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;

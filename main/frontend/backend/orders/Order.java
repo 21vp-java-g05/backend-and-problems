@@ -1,5 +1,6 @@
 package main.frontend.backend.orders;
 
+import main.frontend.backend.lists.BookList_forSell;
 import main.frontend.backend.users.Customer;
 
 import main.frontend.backend.users.Employee;
@@ -13,10 +14,10 @@ public class Order {
 	private Employee employee;
 	private Customer customer;
 	private float SalesPrice;
-	private BookList_price books;
+	private BookList_forSell books;
 
 	public Order() {}
-	public Order(int id, Date OrderTime, Employee employee, Customer customer, float SalesPrice, BookList_price books) {
+	public Order(int id, Date OrderTime, Employee employee, Customer customer, float SalesPrice, BookList_forSell books) {
 		this.id = id;
 		this.OrderTime = OrderTime;
 		this.employee = employee;
@@ -31,43 +32,37 @@ public class Order {
 	public Employee getEmployee() { return employee; }
 	public Customer getCustomer() { return customer; }
 	public float getSalesPrice() { return SalesPrice; }
-	public BookList_price getBooks() { return books; }
+	public BookList_forSell getBooks() { return books; }
 
-	public void changeInfo(int id, Date OrderTime, Employee employee, Customer customer, float SalesPrice, BookList_price books) {
+	public void changeInfo(int id, Date OrderTime, Employee employee, Customer customer, float SalesPrice, BookList_forSell books) {
 		this.id = id;
 		this.OrderTime = OrderTime;
-		if (employee != null) this.employee = employee;
-		if (employee != null) this.customer = customer;
+		this.employee = employee;
+		this.customer = customer;
 		this.SalesPrice = SalesPrice;
-		if (books != null) this.books = books;
+		this.books = books;
 	}
 
 	public boolean add_toDatabase() {
 		if (books == null) return false;
 
 		DBconnect db = new DBconnect();
-		String object = "ORDERS";
 		String value = "(DEFAULT, " + toString() + ")";
 		
 		try {
-			db.turnAutoCommitOff();
+			if (! db.setAutoCommit(false)) return false;
 
-			if ((id = db.add_getAuto(object, value)) <= 0) return false;
-			
-			if (! books.add_toDatabase(object, id)) {
+			if ((id = db.add_getAuto("ORDERS", value)) <= 0) return false;
+
+			if (! books.addOrders_toDatabase(id)) {
 				db.rollback();
 				return false;
 			}
 
-			try { db.commit(); }
-			catch (SQLException e) {
-				System.err.println("Committing error while adding order: " + e.getMessage());
+			if (! db.commit()) {
 				db.rollback();
 				return false;
 			}
-		} catch (SQLException e) {
-			System.err.println("Connection error while adding order: " + e.getMessage());
-			return false;
 		} finally { db.close(); }
 		return true;
 	}

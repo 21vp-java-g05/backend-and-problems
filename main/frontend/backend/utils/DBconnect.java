@@ -2,7 +2,7 @@ package main.frontend.backend.utils;
 
 import java.sql.*;
 
-public class DBconnect implements AutoCloseable {
+public class DBconnect {
 	private static final String DRIVER = "org.postgresql.Driver";
 	private static final String URL = "jdbc:postgresql:" + System.getenv("DB_URL");
 	private static final String USER = System.getenv("DB_USER");
@@ -23,10 +23,30 @@ public class DBconnect implements AutoCloseable {
 		}
 	}
 
-	public void turnAutoCommitOff() throws SQLException { connection.setAutoCommit(false); }
-	public void turnAutoCommitOn() throws SQLException { connection.setAutoCommit(true); }
-	public void commit() throws SQLException { connection.commit(); }
-	public void rollback() throws SQLException { connection.rollback(); }
+	public boolean setAutoCommit(boolean status) {
+		try { connection.setAutoCommit(status); }
+		catch (SQLException e) {
+			System.err.println("Change commit's status error: " + e.getMessage());
+			return false;
+		}
+		return true;
+	}
+	public boolean commit() {
+		try { connection.commit(); }
+		catch (SQLException e) {
+			System.err.println("Committing error: " + e.getMessage());
+			return false;
+		}
+		return true;
+	}
+	public boolean rollback() {
+		try { connection.rollback(); }
+		catch (SQLException e) {
+			System.err.println("Rollback error: " + e.getMessage());
+			return false;
+		}
+		return true;
+	}
 
 	// Method to execute a query and retrieve a ResultSet
 	public ResultSet view(String column, String object, String condition) {
@@ -36,7 +56,7 @@ public class DBconnect implements AutoCloseable {
 		
 		try { return connection.createStatement().executeQuery(query); }
 		catch (SQLException e) {
-			System.err.println("Error in view: " + e.getMessage());
+			System.err.println("Viewing error: " + e.getMessage());
 			return null;
 		}
 	}
@@ -44,7 +64,7 @@ public class DBconnect implements AutoCloseable {
 		ResultSet resultSet = view(null, object, condition);
 		try { return resultSet.next(); }
 		catch (SQLException e) {
-			System.err.println("Error in checking exist: " + e.getMessage());
+			System.err.println("Checking exists error: " + e.getMessage());
 			return false;
 		}
 	}
@@ -52,7 +72,7 @@ public class DBconnect implements AutoCloseable {
 		String query = "INSERT INTO " + object + " VALUES " + value;
 		try { return connection.createStatement().executeUpdate(query); }
 		catch (SQLException e) {
-			System.err.println("Error in add: " + e.getMessage());
+			System.err.println("Adding error: " + e.getMessage());
 			return -1;
 		}
 	}
@@ -66,7 +86,7 @@ public class DBconnect implements AutoCloseable {
 			return rs.next() ? rs.getInt(1) : 0;
 		}
 		catch (SQLException e) {
-			System.err.println("Error in add: " + e.getMessage());
+			System.err.println("Adding auto error: " + e.getMessage());
 			return -1;
 		}
 	}
@@ -74,7 +94,7 @@ public class DBconnect implements AutoCloseable {
 		String query = "UPDATE " + object + " SET " + value + " WHERE " + condition;
 		try { return connection.createStatement().executeUpdate(query); }
 		catch (SQLException e) {
-			System.err.println("Error in update: " + e.getMessage());
+			System.err.println("Update error: " + e.getMessage());
 			return -1;
 		}
 	}
@@ -82,7 +102,7 @@ public class DBconnect implements AutoCloseable {
 		String query = "UPDATE " + object + " SET status = " + String.valueOf(status) + " WHERE " + condition;
 		try { return connection.createStatement().executeUpdate(query); }
 		catch (SQLException e) {
-			System.err.println("Error in change status: " + e.getMessage());
+			System.err.println("Changing status error: " + e.getMessage());
 			return -1;
 		}
 	}
@@ -90,7 +110,7 @@ public class DBconnect implements AutoCloseable {
 		String query = "DELETE FROM " + object + " WHERE " + condition;
 		try { return connection.createStatement().executeUpdate(query); }
 		catch (SQLException e) {
-			System.err.println("Error in delete: " + e.getMessage());
+			System.err.println("Deleting error: " + e.getMessage());
 			return -1;
 		}
 	}

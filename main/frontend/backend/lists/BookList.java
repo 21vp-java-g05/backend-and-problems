@@ -10,6 +10,7 @@ public class BookList {
 	private ArrayList<Book> books;
 	
 	public BookList() { books = new ArrayList<>(); }
+	public BookList(ArrayList<Book> books) { books = new ArrayList<>(books); }
 	public BookList(BookList other) { books = new ArrayList<>(other.books); }
 
 	public void add(Book book) { books.add(book); }
@@ -23,16 +24,16 @@ public class BookList {
 	}
 	public ArrayList<Book> getBooks() { return books; }
 
-	private CategoryList getCategories_forBook(CategoryList categories, String id) {
+	private CategoryList getCategories_forBook(CategoryList categories, int id) {
 		DBconnect db = new DBconnect();
 		CategoryList cEachBook = new CategoryList();
-		String condition = "book_id = " + id;
+		String condition = "book_id = " + String.valueOf(id);
 		
 		try (ResultSet cSet = db.view("category_id", "CATEGORY_BOOK", condition);) {
 			while (cSet.next())
 				cEachBook.add(categories.getCategory_byID(cSet.getInt("category_id")));
 		} catch (SQLException e) {
-			System.err.println("Connection error while loading categories for each book");
+			System.err.println("next() error while loading categories for each book");
 			return null;
 		} finally { db.close(); }
 		return cEachBook;
@@ -62,13 +63,13 @@ public class BookList {
 					bSet.getInt("number_of_pages"),
 					publishers.getPublisher_byID(bSet.getInt("publisher")),
 					authors.getAuthor_byID(bSet.getInt("author")),
-					getCategories_forBook(categories, String.valueOf(id)),
+					getCategories_forBook(categories, id),
 					bSet.getBoolean("status")
 				);
 				books.add(book);
 			}
 		} catch (SQLException e) {
-			System.err.println("Connection error while loading books: " + e.getMessage());
+			System.err.println("next() error while loading books: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;

@@ -84,9 +84,6 @@ public class Account {
 			return null;
 		} finally { db.close(); }
 	}
-	public boolean logout() {
-		return true;
-	}
 
 	public CustomerList loadCustomers_fromDatabase() {
 		CustomerList customers = new CustomerList();

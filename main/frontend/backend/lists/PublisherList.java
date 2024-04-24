@@ -10,6 +10,7 @@ public class PublisherList {
 	private ArrayList<Publisher> publishers;
 	
 	public PublisherList() { publishers = new ArrayList<>(); }
+	public PublisherList(ArrayList<Publisher> publishers) { publishers = new ArrayList<>(publishers); }
 	public PublisherList(PublisherList other) { publishers = new ArrayList<>(other.publishers); }
 
 	public void add(Publisher publisher) { publishers.add(publisher); }
@@ -41,7 +42,7 @@ public class PublisherList {
 					pSet.getBoolean("status")
 				));
 		} catch (Exception e) {
-			System.err.println("Connection error while loading publishers: " + e.getMessage());
+			System.err.println("next() error while loading publishers: " + e.getMessage());
 			return false;
 		} finally { db.close(); }
 		return true;
