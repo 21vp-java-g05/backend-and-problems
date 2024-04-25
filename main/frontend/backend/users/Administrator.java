@@ -37,16 +37,19 @@ public class Administrator extends Account {
 		return account.updateAccount_toDatabase();
 	}
 
-	public void revenue_fromBook() {
-
+	public void revenue_fromBook_d2d(int id, java.util.Date from, java.util.Date to) {
+		// Return an array of prices
 	}
-	public void revenue_fromCategory() {
+	public void revenue_fromCategory_d2d(int id, java.util.Date from, java.util.Date to) {
+		// Return:
+			// Book
+			// Quantity
+			// Price
+	}
+	public void revenue_fromCustomer_d2d(int id, java.util.Date from, java.util.Date to) {
 		
 	}
-	public void revenue_fromCustomer() {
-		
-	}
-	public void revenue_fromEmployee() {
+	public void revenue_fromEmployee_d2d(int id, java.util.Date from, java.util.Date to) {
 		
 	}
 

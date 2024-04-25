@@ -25,7 +25,13 @@ public class Employee extends Account {
 	private void checkRole() {
 		if (getRole() != 1) throw new IllegalArgumentException("Role must be employee");
 	}
-	private float calPrice(BookList_forSell books) {
+	private float check_minPrice(Book_forSell book) {
+		return book.getPrice()*1.1f;
+	}
+	private float calPrice(Book_forSell book) {
+		return book.getPrice()*diff;
+	}
+	private float total(BookList_forSell books) {
 		float price = 0;
 
 		for (Book_forSell book : books.getBooks())
@@ -35,16 +41,20 @@ public class Employee extends Account {
 	}
 
 	public Order order(Customer customer, BookList_forSell books) {
-		// Quantity is number of books bought
-		float SalesPrice = calPrice(books);
-		
 		// Check if customer exists
 		if (
 			customer != null &&
 			customer.check()
-		) SalesPrice *= 0.95;
-			
-		Order order = new Order(-1, new Time().currentTime(), this, customer, SalesPrice, books);
+		)
+			for (Book_forSell book : books.getBooks()) {
+				float minPrice = check_minPrice(book);
+				float price = calPrice(book) * 0.95f;
+
+				book.setPrice(price > minPrice ? price : minPrice);
+			}
+		
+		// Quantity is number of books bought
+		Order order = new Order(-1, new Time().currentTime(), this, customer, total(books), books);
 
 		if (! order.add_toDatabase()) return null;
 
