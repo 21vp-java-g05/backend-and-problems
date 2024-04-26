@@ -14,7 +14,6 @@ public class PublisherList {
 	public PublisherList(PublisherList other) { publishers = new ArrayList<>(other.publishers); }
 
 	public void add(Publisher publisher) { publishers.add(publisher); }
-	public void clear() { publishers.clear(); }
 	public int size() { return publishers.size(); }
 	
 	public Publisher getPublisher_byID(int id) {

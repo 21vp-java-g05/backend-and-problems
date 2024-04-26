@@ -1,8 +1,9 @@
 package main.frontend.backend.orders;
 
-import main.frontend.backend.lists.BookList_forSell;
+import main.frontend.backend.lists.Import_BookList;
 import main.frontend.backend.objects.Book;
-import main.frontend.backend.objects.Book_forSell;
+import main.frontend.backend.objects.Import_Book;
+import main.frontend.backend.objects.Order_Book;
 import main.frontend.backend.users.Employee;
 import main.frontend.backend.utils.DBconnect;
 import main.frontend.backend.utils.Time;
@@ -14,10 +15,10 @@ public class ImportSheet {
 	private Date ImportTime;
 	private Employee employee;
 	private float TotalCost;
-	private BookList_forSell books;
+	private Import_BookList books;
 
 	public ImportSheet() {}
-	public ImportSheet(int id, Date ImportTime, Employee employee, float TotalCost, BookList_forSell books) {
+	public ImportSheet(int id, Date ImportTime, Employee employee, float TotalCost, Import_BookList books) {
 		this.id = id;
 		this.ImportTime = ImportTime;
 		this.employee = employee;
@@ -30,9 +31,9 @@ public class ImportSheet {
 	public Date getImportTime() { return ImportTime; }
 	public Employee getEmployee() { return employee; }
 	public float getTotalCost() { return TotalCost; }
-	public BookList_forSell getBookList() { return books; }
+	public Import_BookList getBookList() { return books; }
 
-	public void changeInfo(int id, Date ImportTime, Employee employee, BookList_forSell books) {
+	public void changeInfo(int id, Date ImportTime, Employee employee, Import_BookList books) {
 		this.id = id;
 		this.ImportTime = ImportTime;
 		this.employee = employee;
@@ -42,7 +43,7 @@ public class ImportSheet {
 	private float calPrice() {
 		float price = 0;
 
-		for (Book_forSell book : books.getBooks())
+		for (Order_Book book : books.getBooks())
 			price += book.getQuantity()*book.getPrice();
 		
 		return price;
@@ -51,7 +52,7 @@ public class ImportSheet {
 	public boolean load_fromFile(String FileName) {
 		ImportTime = new Time().currentTime();
 		
-		books = new BookList_forSell();
+		books = new Import_BookList();
 		if (! books.load_fromFile(FileName)) return false;
 		
 		TotalCost = calPrice();
@@ -73,8 +74,8 @@ public class ImportSheet {
 			// Add book if it's not existing
 			// Get book's id
 			int bID;
-			for (Book_forSell book_forSell : books.getBooks()) {
-				Book book = book_forSell.getBook();
+			for (Import_Book book_forImport : books.getBooks()) {
+				Book book = book_forImport.getBook();
 				if ((bID = db.add_getAuto("BOOK", value)) <= 0) {
 					if (bID < 0) {
 						db.rollback();
@@ -95,7 +96,7 @@ public class ImportSheet {
 					}
 				}
 				book.setId(bID);
-				book_forSell.setSellID(id);
+				book_forImport.setSellID(id);
 			}
 
 			if (! books.addImports_toDatabase()) {

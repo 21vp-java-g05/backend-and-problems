@@ -1,6 +1,6 @@
 package main.frontend.backend.orders;
 
-import main.frontend.backend.lists.BookList_forSell;
+import main.frontend.backend.lists.Order_BookList;
 import main.frontend.backend.users.Customer;
 
 import main.frontend.backend.users.Employee;
@@ -14,10 +14,10 @@ public class Order {
 	private Employee employee;
 	private Customer customer;
 	private float SalesPrice;
-	private BookList_forSell books;
+	private Order_BookList books;
 
 	public Order() {}
-	public Order(int id, Date OrderTime, Employee employee, Customer customer, float SalesPrice, BookList_forSell books) {
+	public Order(int id, Date OrderTime, Employee employee, Customer customer, float SalesPrice, Order_BookList books) {
 		this.id = id;
 		this.OrderTime = OrderTime;
 		this.employee = employee;
@@ -32,9 +32,9 @@ public class Order {
 	public Employee getEmployee() { return employee; }
 	public Customer getCustomer() { return customer; }
 	public float getSalesPrice() { return SalesPrice; }
-	public BookList_forSell getBooks() { return books; }
+	public Order_BookList getBooks() { return books; }
 
-	public void changeInfo(int id, Date OrderTime, Employee employee, Customer customer, float SalesPrice, BookList_forSell books) {
+	public void changeInfo(int id, Date OrderTime, Employee employee, Customer customer, float SalesPrice, Order_BookList books) {
 		this.id = id;
 		this.OrderTime = OrderTime;
 		this.employee = employee;
@@ -51,9 +51,7 @@ public class Order {
 		
 		try {
 			if (! db.setAutoCommit(false)) return false;
-
 			if ((id = db.add_getAuto("ORDERS", value)) <= 0) return false;
-
 			if (! books.addOrders_toDatabase(id)) {
 				db.rollback();
 				return false;

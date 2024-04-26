@@ -14,7 +14,6 @@ public class AccountList {
 	public AccountList(AccountList other) { accounts = new ArrayList<>(other.accounts); }
 	
 	public void add(Account account) { accounts.add(account); }
-	public void clear() { accounts.clear(); }
 	public int size() { return accounts.size(); }
 	
 	public Account getAccount_byID(int id) {

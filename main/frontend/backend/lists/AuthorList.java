@@ -14,7 +14,6 @@ public class AuthorList {
 	public AuthorList(AuthorList other) { authors = new ArrayList<>(other.authors); }
 	
 	public void add(Author author) { authors.add(author); }
-	public void clear() { authors.clear(); }
 	public int size() { return authors.size(); }
 	
 	public Author getAuthor_byID(int id) {

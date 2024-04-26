@@ -14,7 +14,6 @@ public class CustomerList {
 	public CustomerList(CustomerList other) { customers = new ArrayList<>(other.customers); }
 
 	public void add(Customer customer) { customers.add(customer); }
-	public void clear() { customers.clear(); }
 	public int size() { return customers.size(); }
 	
 	public Customer getCustomer_byID(int id) {

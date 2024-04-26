@@ -14,7 +14,6 @@ public class CategoryList {
 	public CategoryList(CategoryList other) { categories = new ArrayList<>(other.categories); }
 
 	public void add(Category category) { categories.add(category); }
-	public void clear() { categories.clear(); }
 	public int size() { return categories.size(); }
 	
 	public Category getCategory_byID(int id) {

@@ -15,7 +15,6 @@ public class OrderList {
 	public OrderList(OrderList other) { orders = new ArrayList<>(other.orders); }
 	
 	public void add(Order author) { orders.add(author); }
-	public void clear() { orders.clear(); }
 	public int size() { return orders.size(); }
 	
 	public Order getAuthor_byID(int id) {
@@ -38,7 +37,7 @@ public class OrderList {
 		try (ResultSet oSet = db.view(null, "ORDERS", condition);) {
 			while (oSet.next()) {
 				int id = oSet.getInt("id");
-				BookList_forSell books = new BookList_forSell();
+				Order_BookList books = new Order_BookList();
 				if (! books.loadOrders_fromDatabase(id)) return false;
 
 

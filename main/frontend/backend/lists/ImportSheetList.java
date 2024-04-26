@@ -15,7 +15,6 @@ public class ImportSheetList {
 	public ImportSheetList(ImportSheetList other) { importSheets = new ArrayList<>(other.importSheets); }
 	
 	public void add(ImportSheet importSheet) { importSheets.add(importSheet); }
-	public void clear() { importSheets.clear(); }
 	public int size() { return importSheets.size(); }
 	
     public ImportSheet getAuthor_byID(int id) {
@@ -36,7 +35,7 @@ public class ImportSheetList {
         try (ResultSet iSet = db.view(null, "IMPORTS", condition)) {
             while (iSet.next()) {
                 int id = iSet.getInt("id");
-                BookList_forSell books = new BookList_forSell();
+                Import_BookList books = new Import_BookList();
                 if (! books.loadImports_fromDatabase(id)) return false;
                 
                 importSheets.add(new ImportSheet(

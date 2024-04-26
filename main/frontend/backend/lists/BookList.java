@@ -14,7 +14,6 @@ public class BookList {
 	public BookList(BookList other) { books = new ArrayList<>(other.books); }
 
 	public void add(Book book) { books.add(book); }
-	public void clear() { books.clear(); }
 	public int size() { return books.size(); }
 	
 	public Book getBook_byId(int id) {

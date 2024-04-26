@@ -1,7 +1,9 @@
 package main.frontend.backend.users;
 
-import main.frontend.backend.lists.BookList_forSell;
-import main.frontend.backend.objects.Book_forSell;
+import main.frontend.backend.lists.Import_BookList;
+import main.frontend.backend.lists.Order_BookList;
+import main.frontend.backend.objects.Import_Book;
+import main.frontend.backend.objects.Order_Book;
 import main.frontend.backend.orders.ImportSheet;
 import main.frontend.backend.orders.Order;
 import main.frontend.backend.utils.Time;
@@ -25,41 +27,41 @@ public class Employee extends Account {
 	private void checkRole() {
 		if (getRole() != 1) throw new IllegalArgumentException("Role must be employee");
 	}
-	private float check_minPrice(Book_forSell book) {
+	private float check_minPrice(Order_Book book) {
 		return book.getPrice()*1.1f;
 	}
-	private float calPrice(Book_forSell book) {
+	private float calPrice(Order_Book book) {
 		return book.getPrice()*diff;
 	}
-	private float total(BookList_forSell books) {
+	private float total(Order_BookList books) {
 		float price = 0;
 
-		for (Book_forSell book : books.getBooks())
+		for (Order_Book book : books.getBooks())
 			price += book.getQuantity()*book.getPrice();
 		
-		return price*diff;
+		return price;
 	}
 
-	public Order order(Customer customer, BookList_forSell books) {
+	public Order order(Customer customer, Import_BookList books) {
+		Order_BookList books_forSell = new Order_BookList(books);
 		// Check if customer exists
 		if (
 			customer != null &&
 			customer.check()
 		)
-			for (Book_forSell book : books.getBooks()) {
+			for (Order_Book book : books_forSell.getBooks()) {
 				float minPrice = check_minPrice(book);
 				float price = calPrice(book) * 0.95f;
 
-				book.setPrice(price > minPrice ? price : minPrice);
+				if (minPrice < price) book.setPrice(minPrice);
 			}
 		
 		// Quantity is number of books bought
-		Order order = new Order(-1, new Time().currentTime(), this, customer, total(books), books);
-
+		Order order = new Order(-1, new Time().currentTime(), this, customer, total(books_forSell), books_forSell);
 		if (! order.add_toDatabase()) return null;
 
 		// Update remaining book
-		for (Book_forSell book : books.getBooks()) {
+		for (Import_Book book : books.getBooks()) {
 			book.setRemaining(book.getRemaining() - book.getQuantity());
 			book.updateRemaining_toDatabase();
 		}
