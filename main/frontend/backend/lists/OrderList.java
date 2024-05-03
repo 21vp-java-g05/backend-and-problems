@@ -6,6 +6,8 @@ import main.frontend.backend.utils.DBconnect;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class OrderList {
 	private ArrayList<Order> orders;
@@ -14,16 +16,30 @@ public class OrderList {
 	public OrderList(ArrayList<Order> orders) { orders = new ArrayList<>(orders); }
 	public OrderList(OrderList other) { orders = new ArrayList<>(other.orders); }
 	
-	public void add(Order author) { orders.add(author); }
 	public int size() { return orders.size(); }
+	public boolean isEmpty() { return orders.isEmpty(); }
+	public void add(Order author) { orders.add(author); }
 	
 	public Order getAuthor_byID(int id) {
 		for (Order order : orders)
 			if (order.getId() == id) return order;
 		return null;
 	}
+	public ArrayList<Order> getOrders() { return orders; }
+	public OrderList sortAscending_byDate() {
+		Collections.sort(orders, new Comparator<Order>() {
+			@Override
+			public int compare(Order order1, Order order2) {
+				return order1.getOrderTime().compareTo(order2.getOrderTime());
+			}
+		});
+		return this;
+	}
 
-	public boolean load_fromDatabase(String name) {
+	public boolean load_fromDatabase(String condition) {
+		return load_fromDatabase(condition, null, null);
+	}
+	public boolean load_fromDatabase(String oCon, String bCon, String cCon) {
 		AccountList accounts = new AccountList();
 		CustomerList customers = new CustomerList();
 
@@ -32,14 +48,14 @@ public class OrderList {
 		
 		orders = new ArrayList<Order>();
 		DBconnect db = new DBconnect();
-		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
 		
-		try (ResultSet oSet = db.view(null, "ORDERS", condition);) {
+		try (ResultSet oSet = db.view(null, "ORDERS", oCon);) {
 			while (oSet.next()) {
 				int id = oSet.getInt("id");
-				Order_BookList books = new Order_BookList();
-				if (! books.loadOrders_fromDatabase(id)) return false;
+				String o_bCon = "orders_id = " + String.valueOf(id);
 
+				Order_BookList books = new Order_BookList();
+				if (! books.loadOrders_fromDatabase(o_bCon, bCon, cCon)) return false;
 
 				orders.add(new Order(
 					id,
@@ -55,5 +71,6 @@ public class OrderList {
 			return false;
 		} finally { db.close(); }
 		return true;
+
 	}
 }

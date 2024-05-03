@@ -14,8 +14,9 @@ public class ImportSheetList {
     public ImportSheetList(ArrayList<ImportSheet> importSheets) { importSheets = new ArrayList<>(importSheets); }
 	public ImportSheetList(ImportSheetList other) { importSheets = new ArrayList<>(other.importSheets); }
 	
-	public void add(ImportSheet importSheet) { importSheets.add(importSheet); }
 	public int size() { return importSheets.size(); }
+	public boolean isEmpty() { return importSheets.isEmpty(); }
+	public void add(ImportSheet importSheet) { importSheets.add(importSheet); }
 	
     public ImportSheet getAuthor_byID(int id) {
 		for (ImportSheet importSheet : importSheets)
@@ -23,20 +24,21 @@ public class ImportSheetList {
 		return null;
 	}
 
-	public boolean load_fromDatabase(String name) {
+	public boolean load_fromDatabase(String condition) {
         AccountList accountList = new AccountList();
 
         accountList.load_fromDatabase(null);
 
         importSheets = new ArrayList<ImportSheet>();
         DBconnect db = new DBconnect();
-        String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
 
         try (ResultSet iSet = db.view(null, "IMPORTS", condition)) {
             while (iSet.next()) {
                 int id = iSet.getInt("id");
+                String con = "imports_id = " + String.valueOf(id);
+                
                 Import_BookList books = new Import_BookList();
-                if (! books.loadImports_fromDatabase(id)) return false;
+                if (! books.loadImports_fromDatabase(con)) return false;
                 
                 importSheets.add(new ImportSheet(
                     id,

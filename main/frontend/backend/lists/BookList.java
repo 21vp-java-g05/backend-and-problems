@@ -1,6 +1,6 @@
 package main.frontend.backend.lists;
 
-import main.frontend.backend.objects.Book;
+import main.frontend.backend.objects.Book.Book;
 import main.frontend.backend.utils.DBconnect;
 
 import java.sql.*;
@@ -13,8 +13,9 @@ public class BookList {
 	public BookList(ArrayList<Book> books) { books = new ArrayList<>(books); }
 	public BookList(BookList other) { books = new ArrayList<>(other.books); }
 
-	public void add(Book book) { books.add(book); }
 	public int size() { return books.size(); }
+	public boolean isEmpty() { return books.isEmpty(); }
+	public void add(Book book) { books.add(book); }
 	
 	public Book getBook_byId(int id) {
 		for (Book book : books)
@@ -23,10 +24,10 @@ public class BookList {
 	}
 	public ArrayList<Book> getBooks() { return books; }
 
-	private CategoryList getCategories_forBook(CategoryList categories, int id) {
+	private CategoryList getCategories_forBook(CategoryList categories, int id, String cCon) {
 		DBconnect db = new DBconnect();
 		CategoryList cEachBook = new CategoryList();
-		String condition = "book_id = " + String.valueOf(id);
+		String condition = "book_id = " + String.valueOf(id) + cCon;
 		
 		try (ResultSet cSet = db.view("category_id", "CATEGORY_BOOK", condition);) {
 			while (cSet.next())
@@ -38,7 +39,10 @@ public class BookList {
 		return cEachBook;
 	}
 
-	public boolean loadBooks_fromDatabase(String name) {
+	public boolean loadBooks_fromDatabase(String condition) {
+		return loadBooks_fromDatabase(condition, null);
+	}
+	public boolean loadBooks_fromDatabase(String bCon, String cCon) {
 		PublisherList publishers = new PublisherList();
 		AuthorList authors = new AuthorList();
 		CategoryList categories = new CategoryList();
@@ -49,9 +53,8 @@ public class BookList {
 		
 		books = new ArrayList<Book>();
 		DBconnect db = new DBconnect();
-		String condition = name == null || name.isEmpty() ? null : ("title LIKE '%" + name + "%'");
 		
-		try (ResultSet bSet = db.view(null, "BOOK", condition);) {
+		try (ResultSet bSet = db.view(null, "BOOK", bCon);) {
 			while (bSet.next()) {
 				int id = bSet.getInt("id");
 
@@ -62,7 +65,7 @@ public class BookList {
 					bSet.getInt("number_of_pages"),
 					publishers.getPublisher_byID(bSet.getInt("publisher")),
 					authors.getAuthor_byID(bSet.getInt("author")),
-					getCategories_forBook(categories, id),
+					getCategories_forBook(categories, id, cCon),
 					bSet.getBoolean("status")
 				);
 				books.add(book);

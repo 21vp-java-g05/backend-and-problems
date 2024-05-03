@@ -1,7 +1,10 @@
 package main.frontend.backend.users;
 
 import main.frontend.backend.lists.AccountList;
+import main.frontend.backend.lists.OrderList;
+import main.frontend.backend.orders.Order;
 import main.frontend.backend.utils.DBconnect;
+import main.frontend.backend.utils.Time;
 
 public class Administrator extends Account {
 	public Administrator(int id, String username, String password, String mail, String fullname, int role) {
@@ -37,21 +40,38 @@ public class Administrator extends Account {
 		return account.updateAccount_toDatabase();
 	}
 
-	public void revenue_fromBook_d2d(int id, java.util.Date from, java.util.Date to) {
-		// Return an array of prices
-	}
-	public void revenue_fromCategory_d2d(int id, java.util.Date from, java.util.Date to) {
-		// Return:
-			// Book
-			// Quantity
-			// Price
-	}
-	public void revenue_fromCustomer_d2d(int id, java.util.Date from, java.util.Date to) {
+	// Giải quyết vấn đề truy cập vào các hàm load book và gửi đk sách
+	// private OrderList revenue_d2d(java.util.Date from, java.util.Date to, String other_condition) {
+	// 	String condition = new Time(from) + " <= order_time AND order_time <= " + new Time(to) + other_condition;
+	// 	OrderList oList = loadOrders_fromDatabase(condition);
+	// 	return oList.sortAscending_byDate();
+	// }
+	// public OrderList revenue_fromBook_d2d(int id, java.util.Date from, java.util.Date to) {
+	// 	String bCon = " AND book_id = " + String.valueOf(id);
+	// 	OrderList oList = revenue_d2d(from, to, null);
+	// 	OrderList result = new OrderList();
 		
-	}
-	public void revenue_fromEmployee_d2d(int id, java.util.Date from, java.util.Date to) {
+	// 	// Get book by id
+	// 	for (Order order : oList.getOrders()) {
+			
+	// 	}
+
+	// 	return result;
+	// }
+	// public OrderList revenue_fromCategory_d2d(int id, java.util.Date from, java.util.Date to) {
+	// 	String bCon1 = "category_id = " + String.valueOf(id);
+	// 	OrderList oList = revenue_d2d(from, to, null);
 		
-	}
+	// 	return oList;
+	// }
+	// public OrderList revenue_fromCustomer_d2d(int id, java.util.Date from, java.util.Date to) {
+	// 	String con = " AND customer = " + String.valueOf(id);
+	// 	return revenue_d2d(from, to, con);
+	// }
+	// public OrderList revenue_fromEmployee_d2d(int id, java.util.Date from, java.util.Date to) {
+	// 	String con = " AND employee = " + String.valueOf(id);
+	// 	return revenue_d2d(from, to, con);
+	// }
 
 	@Override
 	public String toString() {

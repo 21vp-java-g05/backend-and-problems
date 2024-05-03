@@ -1,4 +1,4 @@
-package main.frontend.backend.objects;
+package main.frontend.backend.objects.Book;
 
 import main.frontend.backend.utils.DBconnect;
 
@@ -35,7 +35,7 @@ public class Import_Book extends Order_Book {
 		this.remaining = remaining;
 	}
 
-	public boolean checkRemaining_valid() { return 0 <= remaining && remaining <= quantity; }
+	private boolean checkRemaining_valid() { return 0 <= remaining && remaining <= quantity; }
 
 	public boolean updateRemaining_toDatabase() {
 		DBconnect db = new DBconnect();
