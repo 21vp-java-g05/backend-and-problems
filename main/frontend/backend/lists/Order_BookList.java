@@ -2,7 +2,7 @@ package main.frontend.backend.lists;
 
 import java.util.ArrayList;
 
-import main.frontend.backend.objects.Order_Book;
+import main.frontend.backend.objects.Book.Order_Book;
 import main.frontend.backend.utils.DBconnect;
 
 import java.sql.*;
@@ -15,23 +15,28 @@ public class Order_BookList {
 	public Order_BookList(Order_BookList other) { books = new ArrayList<>(other.books); }
 	public Order_BookList(Import_BookList other) { books = new ArrayList<>(other.getBooks()); }
 	
-	public void add(Order_Book book) { books.add(book); }
 	public int size() { return books.size(); }
+	public boolean isEmpty() { return books.isEmpty(); }
+	public void add(Order_Book book) { books.add(book); }
 
-	public Order_Book get(int i) {
-		return books.get(i);
+	public Order_Book getBook_byId(int id) {
+		for (Order_Book book : books)
+			if (book.getBook().getId() == id) return book;
+		return null;
 	}
 	public ArrayList<Order_Book> getBooks() { return books; }
+
 	
-	public boolean loadOrders_fromDatabase(int id) {
+	public boolean loadOrders_fromDatabase(String condition) {
+		return loadOrders_fromDatabase(condition, null, null);
+	}
+	public boolean loadOrders_fromDatabase(String o_bCon, String bCon, String cCon) {
 		books = new ArrayList<>();
 		DBconnect db = new DBconnect();
-		String object = "ORDERS";
-		String condition = object + "_id = " + String.valueOf(id);
 		
-		try (ResultSet bSet = db.view(null, object + "_BOOK", condition);) {
+		try (ResultSet bSet = db.view(null, "ORDERS_BOOK", o_bCon);) {
 			BookList bList = new BookList();
-			if (! bList.loadBooks_fromDatabase(null)) return false;
+			if (! bList.loadBooks_fromDatabase(bCon, cCon)) return false;
 
 			while (bSet.next())
 				books.add(new Order_Book(

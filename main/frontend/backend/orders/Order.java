@@ -5,6 +5,7 @@ import main.frontend.backend.users.Customer;
 
 import main.frontend.backend.users.Employee;
 import main.frontend.backend.utils.DBconnect;
+import main.frontend.backend.utils.Time;
 
 import java.sql.*;
 
@@ -67,6 +68,6 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return String.valueOf(new Timestamp(OrderTime.getTime())) + ", " + String.valueOf(employee.getId()) + ", " + String.valueOf(customer.getId()) + ", " + String.valueOf(SalesPrice);
+		return new Time(OrderTime) + ", " + String.valueOf(employee.getId()) + ", " + String.valueOf(customer.getId()) + ", " + String.valueOf(SalesPrice);
 	}
 }

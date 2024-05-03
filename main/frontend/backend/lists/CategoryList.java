@@ -13,8 +13,9 @@ public class CategoryList {
 	public CategoryList(ArrayList<Category> categories) { categories = new ArrayList<>(categories); }
 	public CategoryList(CategoryList other) { categories = new ArrayList<>(other.categories); }
 
-	public void add(Category category) { categories.add(category); }
 	public int size() { return categories.size(); }
+	public boolean isEmpty() { return categories.isEmpty(); }
+	public void add(Category category) { categories.add(category); }
 	
 	public Category getCategory_byID(int id) {
 		for (Category category : categories)
@@ -28,10 +29,9 @@ public class CategoryList {
 	}
 	public ArrayList<Category> getCategories() { return categories; }
 
-	public boolean load_fromDatabase(String name) {
+	public boolean load_fromDatabase(String condition) {
 		categories = new ArrayList<Category>();
 		DBconnect db = new DBconnect();
-		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
 		
 		try (ResultSet cSet = db.view(null, "CATEGORY", condition);) {
 			while (cSet.next())

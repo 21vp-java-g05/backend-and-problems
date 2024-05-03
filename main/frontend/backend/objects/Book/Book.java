@@ -1,8 +1,11 @@
-package main.frontend.backend.objects;
+package main.frontend.backend.objects.Book;
 
 import java.sql.*;
 
 import main.frontend.backend.lists.CategoryList;
+import main.frontend.backend.objects.Author;
+import main.frontend.backend.objects.Category;
+import main.frontend.backend.objects.Publisher;
 import main.frontend.backend.utils.DBconnect;
 
 public class Book {

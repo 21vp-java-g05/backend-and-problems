@@ -13,8 +13,9 @@ public class AuthorList {
 	public AuthorList(ArrayList<Author> authors) { authors = new ArrayList<>(authors); }
 	public AuthorList(AuthorList other) { authors = new ArrayList<>(other.authors); }
 	
-	public void add(Author author) { authors.add(author); }
 	public int size() { return authors.size(); }
+	public boolean isEmpty() { return authors.isEmpty(); }
+	public void add(Author author) { authors.add(author); }
 	
 	public Author getAuthor_byID(int id) {
 		for (Author author : authors)
@@ -27,10 +28,9 @@ public class AuthorList {
 		return null;
 	}
 
-	public boolean load_fromDatabase(String name) {
+	public boolean load_fromDatabase(String condition) {
 		authors = new ArrayList<Author>();
 		DBconnect db = new DBconnect();
-		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
 		
 		try (ResultSet aSet = db.view(null, "AUTHOR", condition);) {
 			while (aSet.next())

@@ -13,8 +13,9 @@ public class PublisherList {
 	public PublisherList(ArrayList<Publisher> publishers) { publishers = new ArrayList<>(publishers); }
 	public PublisherList(PublisherList other) { publishers = new ArrayList<>(other.publishers); }
 
-	public void add(Publisher publisher) { publishers.add(publisher); }
 	public int size() { return publishers.size(); }
+	public boolean isEmpty() { return publishers.isEmpty(); }
+	public void add(Publisher publisher) { publishers.add(publisher); }
 	
 	public Publisher getPublisher_byID(int id) {
 		for (Publisher publisher : publishers)
@@ -27,10 +28,9 @@ public class PublisherList {
 		return null;
 	}
 
-	public boolean load_fromDatabase(String name) {
+	public boolean load_fromDatabase(String condition) {
 		publishers = new ArrayList<Publisher>();
 		DBconnect db = new DBconnect();
-		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
 		
 		try (ResultSet pSet = db.view(null, "PUBLISHER", condition);) {
 			while (pSet.next())

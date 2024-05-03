@@ -101,13 +101,13 @@ public class Account {
 		finally { db.close(); }
 	}
 
-	public ImportSheetList loadImportSheets_fromDatabase() {
+	public ImportSheetList loadImportSheets_fromDatabase(String condition) {
 		ImportSheetList importSheets = new ImportSheetList();
-		return new ImportSheetList().load_fromDatabase(null) ? importSheets : null;
+		return new ImportSheetList().load_fromDatabase(condition) ? importSheets : null;
 	}
-	public OrderList loadOrders_fromDatabase() {
+	public OrderList loadOrders_fromDatabase(String condition) {
 		OrderList orders = new OrderList();
-		return orders.load_fromDatabase(null) ? orders : null;
+		return orders.load_fromDatabase(condition) ? orders : null;
 	}
 
 	@Override

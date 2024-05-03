@@ -1,4 +1,4 @@
-package main.frontend.backend.objects;
+package main.frontend.backend.objects.Book;
 
 public class Order_Book {
 	protected Book book;

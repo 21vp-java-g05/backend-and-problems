@@ -13,8 +13,9 @@ public class AccountList {
 	public AccountList(ArrayList<Account> accounts) { accounts = new ArrayList<>(accounts); }
 	public AccountList(AccountList other) { accounts = new ArrayList<>(other.accounts); }
 	
-	public void add(Account account) { accounts.add(account); }
 	public int size() { return accounts.size(); }
+	public boolean isEmpty() { return accounts.isEmpty(); }
+	public void add(Account account) { accounts.add(account); }
 	
 	public Account getAccount_byID(int id) {
 		for (Account account : accounts)
@@ -22,10 +23,9 @@ public class AccountList {
 		return null;
 	}
 
-	public boolean load_fromDatabase(String name) {
+	public boolean load_fromDatabase(String condition) {
 		accounts = new ArrayList<Account>();
 		DBconnect db = new DBconnect();
-		String condition = name == null || name.isEmpty() ? null : ("name LIKE '%" + name + "%'");
 		
 		try (ResultSet aSet = db.view(null, "ACCOUNT", condition);) {
 			while (aSet.next())

@@ -2,9 +2,9 @@ package main.frontend.backend.lists;
 
 import java.util.ArrayList;
 
-import main.frontend.backend.objects.Book;
-import main.frontend.backend.objects.Import_Book;
-import main.frontend.backend.objects.Order_Book;
+import main.frontend.backend.objects.Book.Book;
+import main.frontend.backend.objects.Book.Import_Book;
+import main.frontend.backend.objects.Book.Order_Book;
 import main.frontend.backend.utils.DBconnect;
 
 import java.io.*;
@@ -21,8 +21,9 @@ public class Import_BookList {
 			books.add(new Import_Book(book));
 	}
 	
-	public void add(Import_Book book) { books.add(book); }
 	public int size() { return books.size(); }
+	public boolean isEmpty() { return books.isEmpty(); }
+	public void add(Import_Book book) { books.add(book); }
 
 	public Import_Book get(int i) {
 		return books.get(i);
@@ -82,13 +83,11 @@ public class Import_BookList {
 		return true;
 	}
 	
-	public boolean loadImports_fromDatabase(int id) {
+	public boolean loadImports_fromDatabase(String condition) {
 		books = new ArrayList<>();
 		DBconnect db = new DBconnect();
-		String object = "IMPORTS";
-		String condition = object + "_id = " + String.valueOf(id);
 		
-		try (ResultSet bSet = db.view(null, object + "_BOOK", condition);) {
+		try (ResultSet bSet = db.view(null, "IMPORTS_BOOK", condition);) {
 			BookList bList = new BookList();
 			if (! bList.loadBooks_fromDatabase(null)) return false;
 
