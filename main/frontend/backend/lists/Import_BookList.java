@@ -2,9 +2,9 @@ package main.frontend.backend.lists;
 
 import java.util.ArrayList;
 
-import main.frontend.backend.objects.Book.Book;
-import main.frontend.backend.objects.Book.Import_Book;
-import main.frontend.backend.objects.Book.Order_Book;
+import main.frontend.backend.objects.Book;
+import main.frontend.backend.objects.Import_Book;
+import main.frontend.backend.objects.Order_Book;
 import main.frontend.backend.utils.DBconnect;
 
 import java.io.*;

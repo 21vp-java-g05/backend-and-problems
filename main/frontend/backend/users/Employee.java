@@ -2,20 +2,22 @@ package main.frontend.backend.users;
 
 import main.frontend.backend.lists.Import_BookList;
 import main.frontend.backend.lists.Order_BookList;
-import main.frontend.backend.objects.Book.Import_Book;
-import main.frontend.backend.objects.Book.Order_Book;
+import main.frontend.backend.objects.Import_Book;
+import main.frontend.backend.objects.Order_Book;
 import main.frontend.backend.orders.ImportSheet;
 import main.frontend.backend.orders.Order;
 import main.frontend.backend.utils.Time;
 
 public class Employee extends Account {
 	private static final float diff = 1.95f;
-	public Employee(int id, String username, String password, String mail, String fullname, int role) {
-		super(id, username, password, mail, fullname, role);
+
+	public Employee() {}
+	public Employee(int id, String fullname, String mail, String username, String password, int role) {
+		super(id, fullname, mail, username, password, role);
 		checkRole();
 	}
-	public Employee(int id, String username, String password, String mail, String fullname, int role, boolean status) {
-		super(id, username, password, mail, fullname, role, status);
+	public Employee(int id, String fullname, String mail, String username, String password, int role, boolean status) {
+		super(id, fullname, mail, username, password, role, status);
 		checkRole();
 	}
 	public Employee(Employee other) { super(other); }

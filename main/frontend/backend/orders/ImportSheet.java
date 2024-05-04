@@ -1,9 +1,9 @@
 package main.frontend.backend.orders;
 
 import main.frontend.backend.lists.Import_BookList;
-import main.frontend.backend.objects.Book.Book;
-import main.frontend.backend.objects.Book.Import_Book;
-import main.frontend.backend.objects.Book.Order_Book;
+import main.frontend.backend.objects.Book;
+import main.frontend.backend.objects.Import_Book;
+import main.frontend.backend.objects.Order_Book;
 import main.frontend.backend.users.Employee;
 import main.frontend.backend.utils.DBconnect;
 import main.frontend.backend.utils.Time;

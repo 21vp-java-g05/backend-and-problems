@@ -1,6 +1,6 @@
 package main.frontend.backend.lists;
 
-import main.frontend.backend.objects.Book.Book;
+import main.frontend.backend.objects.Book;
 import main.frontend.backend.utils.DBconnect;
 
 import java.sql.*;

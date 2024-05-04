@@ -13,6 +13,7 @@ public class Account {
 	protected String username, password, mail, fullname;
 	protected boolean status;
 
+	public Account() {}
 	public Account(int id, String fullname, String mail, String username, String password, int role, boolean status) {
 		this.id = id;
 		this.username = username;
@@ -80,7 +81,7 @@ public class Account {
 			System.err.println("Invalid username or password");
 			return null;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.err.println("Error in login: " + e.getMessage());
 			return null;
 		} finally { db.close(); }
 	}

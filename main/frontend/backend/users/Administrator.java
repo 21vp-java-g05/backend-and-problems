@@ -1,18 +1,16 @@
 package main.frontend.backend.users;
 
 import main.frontend.backend.lists.AccountList;
-import main.frontend.backend.lists.OrderList;
-import main.frontend.backend.orders.Order;
 import main.frontend.backend.utils.DBconnect;
-import main.frontend.backend.utils.Time;
 
 public class Administrator extends Account {
-	public Administrator(int id, String username, String password, String mail, String fullname, int role) {
-		super(id, username, password, mail, fullname, role);
+	public Administrator() {}
+	public Administrator(int id, String fullname, String mail, String username, String password, int role) {
+		super(id, fullname, mail, username, password, role, true);
 		checkRole();
 	}
-	public Administrator(int id, String username, String password, String mail, String fullname, int role, boolean status) {
-		super(id, username, password, mail, fullname, role, status);
+	public Administrator(int id, String fullname, String mail, String username, String password, int role, boolean status) {
+		super(id, fullname, mail, username, password, role, status);
 		checkRole();
 	}
 	public Administrator(Administrator other) { super(other); }

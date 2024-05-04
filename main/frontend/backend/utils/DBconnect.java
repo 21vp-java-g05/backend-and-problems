@@ -8,7 +8,7 @@ public class DBconnect {
 	private static final String USER = System.getenv("DB_USER");
 	private static final String PASSWORD = System.getenv("DB_PASSWORD");
 
-	private static Connection connection;
+	private Connection connection;
 
 	// Constructor for initializing the connection
 	public DBconnect() {

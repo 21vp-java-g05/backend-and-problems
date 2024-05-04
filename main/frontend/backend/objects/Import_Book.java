@@ -1,4 +1,4 @@
-package main.frontend.backend.objects.Book;
+package main.frontend.backend.objects;
 
 import main.frontend.backend.utils.DBconnect;
 
@@ -42,7 +42,7 @@ public class Import_Book extends Order_Book {
 		String value = "remaining = " + String.valueOf(remaining);
 		String condition = "imports_id = " + String.valueOf(importID) + " AND book_id = " + String.valueOf(book.getId());
 		
-		try { return db.update("AUTHOR", value, condition) > 0; }
+		try { return db.update("IMPORTS_BOOK", value, condition) > 0; }
 		finally { db.close(); }
 	}
 
